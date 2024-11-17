@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 
 h1 {
   font-size: 3em;
@@ -110,4 +110,14 @@ h2 a {
   .container th:nth-child(4) {
     display: none;
   }
+}
+
+/* Estilo para el ícono */
+.table-icon {
+  position: absolute;
+  top: 8vw; /* Ajusta según sea necesario */
+  left: 11vw; /* Ajusta según sea necesario */
+  width: 40px; /* Tamaño del ícono */
+  height: 40px;
+  z-index: 10; /* Asegura que esté por encima de otros elementos */
 }
