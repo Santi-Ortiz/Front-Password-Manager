@@ -1,39 +1,49 @@
-import { Injectable } from '@angular/core'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import { AuthService } from './auth.service';
+import {environment} from "../environments/environment.development";
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class UserService {
-    private apiUrl = 'http://localhost:8090/api/user'
+  private apiUrl = environment.SERVER_URL + '/user';
 
-    constructor(private http: HttpClient) {}
+  private httpOptions: { headers: HttpHeaders } = { headers: new HttpHeaders() };
 
-    // Get user by id
-    getUserById(id: number): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/find/${id}`)
-    }
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.setAuthHeaders(); // Establecemos encabezados al inicializar el servicio
+  }
 
-    // Get all accounts for a user
-    getAccountsByUserId(id: number): Observable<User> {
-        return this.http.get<User>(`${this.apiUrl}/${id}/accounts`)
-    }
+  private setAuthHeaders(): void {
+    const token = this.authService.getToken();
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Nota: template literal corregido
+      }),
+    };
+  }
 
-    // Create user 
-    createUser(user: User): Observable<User> {
-        return this.http.post<User>(`${this.apiUrl}/create`, user)
-    }
+  // Método: Obtener un usuario por ID
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/find/${id}`, this.httpOptions);
+  }
 
-    // Update user
-    updateUser(user: User, id: number): Observable<User> {
-        return this.http.put<User>(`${this.apiUrl}/update/${id}`, user)
-    }
+  // Método: Obtener todas las cuentas asociadas a un usuario
+  getAccountsByUserId(id: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}/accounts`, this.httpOptions);
+  }
 
-    // Delete user
-    deleteUser(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/delete/${id}`)
-    }
+  // Método: Actualizar un usuario
+  updateUser(user: User, id: number): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/update/${id}`, user, this.httpOptions);
+  }
 
+  // Método: Eliminar un usuario
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, this.httpOptions);
+  }
 }

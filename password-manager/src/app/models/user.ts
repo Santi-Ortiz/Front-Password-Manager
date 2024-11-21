@@ -1,4 +1,4 @@
-import { Account } from "../models/account"
+import { Account } from "./account"
 
 export interface User {
     id: number
@@ -6,6 +6,4 @@ export interface User {
     password: string
     email: string
     role: string
-    accounts: Account[]
-    
 }
