@@ -14,7 +14,7 @@ export class AuthService {
   token: string | null = null;
   role: Role | null = null;
   username: string | null = null;
-  usuarioId: number | null = null;
+  userId: number | null = null;
 
   private baseUrl = `${environment.SERVER_URL}/autenticacion`;
   private registerUrl = `${environment.SERVER_URL}/user`;
@@ -48,11 +48,11 @@ export class AuthService {
     }
   }
 
-  public login(username: string, contrasenia: string): Observable<Auth> { // Cambiado a Observable<Auth>
+  public login(username: string, password: string): Observable<Auth> { // Cambiado a Observable<Auth>
     console.log('Iniciando proceso de login en AuthService');
 
     return this.http
-      .post<Auth>(`${this.baseUrl}/login`, { username, contrasenia })
+      .post<Auth>(`${this.baseUrl}/login`, { username, password })
       .pipe(
         tap((data) => {
           console.log('Respuesta recibida del servidor:', data);
@@ -61,18 +61,18 @@ export class AuthService {
           this.token = data.accessToken;
           this.role = data.role;
           this.username = data.username;
-          this.usuarioId = data.userId;
+          this.userId = data.userId;
 
           localStorage.setItem('auth_token', this.token);
           localStorage.setItem('auth_role', this.role);
           localStorage.setItem('username', this.username);
-          localStorage.setItem('usuarioId', this.usuarioId.toString());
+          localStorage.setItem('userId', this.userId.toString());
 
           // Verificación de datos almacenados
           console.log('Token guardado:', this.token);
           console.log('rol asignado:', this.role);
           console.log('Username guardado:', this.username);
-          console.log('Id de usuario guardado:', this.usuarioId);
+          console.log('Id de usuario guardado:', this.userId);
         })
       );
   }

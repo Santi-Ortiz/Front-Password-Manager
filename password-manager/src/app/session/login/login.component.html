@@ -267,15 +267,15 @@
       <form (ngSubmit)="onSubmit()">
         <div class="form">
           <div class="inputBox">
-            <input type="text" required>
+            <input type="text" [(ngModel)]="username" name="username" required>
             <i>Username</i>
           </div>
           <div class="inputBox">
-            <input type="password" required>
+            <input type="password" [(ngModel)]="password" name="password" required>
             <i>Password</i>
           </div>
+          <div *ngIf="error" class="error">{{ error }}</div> <!-- Mostrar errores -->
           <div class="links">
-            <!-- Aquí usamos routerLink para redirigir a la ruta "register" -->
             <a [routerLink]="'/register'">Sign up</a>
           </div>
           <div class="inputBox">
