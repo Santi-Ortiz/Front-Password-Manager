@@ -25,6 +25,10 @@ export class AuthService {
     this.username = localStorage.getItem('username');
   }
 
+  public getUsername(): string | null {
+    return this.username;
+  }
+
   public register(user: any): Observable<any> {
     return this.http.post(`${this.registerUrl}/add`, user, { observe: 'response' }).pipe(
       tap((response) => {

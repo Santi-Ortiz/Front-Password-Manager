@@ -1,8 +1,12 @@
 <div class="table-container">
-  <!-- Icono en la esquina superior izquierda -->
-  <img src="assets/images/plus.png" alt="Add Icon" class="plus-icon">
+  <!-- Botón de agregar/cerrar -->
+  <img
+    [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
+    alt="Add/Close Icon"
+    class="plus-icon"
+    (click)="toggleAdd()">
 
-  <!-- Título y tabla -->
+  <!-- Título y bienvenida -->
   <h1>
     <span class="yellow">
       CryptSafe
@@ -10,88 +14,36 @@
   </h1>
   <h1>
     <span class="red">
-      Bienvenido de vuelta, *nombre de usuario*
+      Bienvenido de vuelta, {{ username || 'Usuario' }}
     </span>
   </h1>
 
+  <!-- Tabla de datos -->
   <table class="container">
     <thead>
-      <tr>
-        <th><h1>Sitio</h1></th>
-        <th><h1>Usuario</h1></th>
-        <th><h1>Contraseña</h1></th>
-        <th><h1>Url referida</h1></th>
-        <th><h1>Info</h1></th>
-        <th><h1>Acciones</h1></th>
-      </tr>
+    <tr>
+      <th><h1>Sitio</h1></th>
+      <th><h1>Usuario</h1></th>
+      <th><h1>Contraseña</h1></th>
+      <th><h1>Url referida</h1></th>
+      <th><h1>Info</h1></th>
+      <th><h1>Acciones</h1></th>
+    </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Google</td>
-        <td>9518</td>
-        <td>6369</td>
-        <td>01:32:50</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
-      <tr>
-        <td>Twitter</td>
-        <td>7326</td>
-        <td>10437</td>
-        <td>00:51:22</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
-      <tr>
-        <td>Amazon</td>
-        <td>4162</td>
-        <td>5327</td>
-        <td>00:24:34</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
-      <tr>
-        <td>LinkedIn</td>
-        <td>3654</td>
-        <td>2961</td>
-        <td>00:12:10</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
-      <tr>
-        <td>CodePen</td>
-        <td>2002</td>
-        <td>4135</td>
-        <td>00:46:19</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
-      <tr>
-        <td>GitHub</td>
-        <td>4623</td>
-        <td>3486</td>
-        <td>00:31:52</td>
-        <td>01:32:50</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-          <img src="assets/images/edit.png" alt="Delete Icon" class="delete-icon">
-        </td>
-      </tr>
+    <!-- Itera sobre las cuentas y aplica clase temporal a la primera fila cuando sea temporal -->
+    <tr *ngFor="let account of accounts; let i = index" [class.temporary-row]="isAdding && i === 0">
+      <td>{{ account.site || '' }}</td>
+      <td>{{ account.user || '' }}</td>
+      <td>{{ account.password || '' }}</td>
+      <td>{{ account.url || '' }}</td>
+      <td>{{ account.info || '' }}</td>
+      <td>
+        <!-- Oculta las acciones para la fila temporal -->
+        <img *ngIf="!isAdding || i !== 0" src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
+        <img *ngIf="!isAdding || i !== 0" src="assets/images/edit.png" alt="Edit Icon" class="delete-icon">
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
