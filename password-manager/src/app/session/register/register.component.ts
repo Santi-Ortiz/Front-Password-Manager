@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Role } from '../../models/role';
+import { HttpClientModule } from '@angular/common/http';
+import {NgIf} from "@angular/common"; // Importa HttpClientModule
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [],
+  imports: [
+    HttpClientModule,
+    ReactiveFormsModule,
+    NgIf,
+    // Asegúrate de incluirlo aquí
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -16,7 +23,6 @@ export class RegisterComponent {
   message: string = '';
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    // Definición del formulario reactivo
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       telephone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -28,18 +34,13 @@ export class RegisterComponent {
     });
   }
 
-  /**
-   * Validación personalizada: Verifica que las contraseñas coincidan.
-   */
   passwordsMatch(group: FormGroup) {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  /**
-   * Manejo del evento submit del formulario.
-   */
+
   onSubmit() {
     if (this.registerForm.invalid) {
       this.message = 'Por favor corrige los errores del formulario.';
@@ -47,32 +48,38 @@ export class RegisterComponent {
     }
 
     this.isLoading = true;
-
-    // Extraemos los valores del formulario
     const { username, telephone, email, password } = this.registerForm.value;
 
-    // Creamos el objeto usuario con rol User por defecto
+    const roleType = Role.User;
+    const roleId = roleType === Role.User ? 1 : 2;
+
     const newUser = {
       username,
       password,
       email,
       telephone,
-      role: Role.User // Rol siempre será USER
+      role: { id: roleId, rolType: roleType }
     };
 
-    // Llamamos al servicio AuthService para registrar al usuario
     this.authService.register(newUser).subscribe({
       next: () => {
         this.message = 'Usuario creado exitosamente.';
         this.registerForm.reset();
       },
       error: (err) => {
+        // Manejar errores específicos
+        if (err.error.message.includes('ya está en uso')) {
+          this.message = 'El usuario o correo ya existe.';
+        } else {
+          this.message = 'Error al crear el usuario.';
+        }
         console.error('Error al registrar usuario:', err);
-        this.message = 'Error al crear el usuario.';
       },
       complete: () => {
         this.isLoading = false;
       }
     });
   }
+
+
 }

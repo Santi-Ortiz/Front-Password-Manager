@@ -26,11 +26,11 @@ export class AuthService {
   }
 
   public register(user: any): Observable<any> {
-    return this.http.post(`${this.registerUrl}/create`, user, { observe: 'response' }).pipe(
+    return this.http.post(`${this.registerUrl}/add`, user, { observe: 'response' }).pipe(
       tap((response) => {
         console.log('Usuario registrado exitosamente', response);
       }),
-      map((response) => response.body || {}), // Manejar caso de respuesta vacía
+      map((response) => response.body || { message: 'No content' }), // Maneja caso de respuesta vacía
       catchError((error) => {
         console.error('Error al registrar usuario:', error);
         return throwError(() => new Error(error.message || 'Error al registrar usuario.'));

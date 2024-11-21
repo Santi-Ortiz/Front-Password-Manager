@@ -129,34 +129,71 @@
   <span></span>
   <span></span>
   <span></span>
+
   <div class="signin">
     <div class="content">
       <h2>Registro Nuevo</h2>
-      <div class="form">
-        <div class="inputBox">
-          <input type="text" required>
-          <i>Usuario</i>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form">
+          <!-- Username -->
+          <div class="inputBox">
+            <input formControlName="username" type="text" required>
+            <i>Usuario</i>
+            <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid">
+              <span *ngIf="registerForm.get('username')?.hasError('required')">Campo obligatorio</span>
+              <span *ngIf="registerForm.get('username')?.hasError('minlength')">Debe tener al menos 3 caracteres</span>
+            </div>
+          </div>
+
+          <!-- Telephone -->
+          <div class="inputBox">
+            <input formControlName="telephone" type="tel" required>
+            <i>Teléfono</i>
+            <div *ngIf="registerForm.get('telephone')?.touched && registerForm.get('telephone')?.invalid">
+              <span *ngIf="registerForm.get('telephone')?.hasError('required')">Campo obligatorio</span>
+              <span *ngIf="registerForm.get('telephone')?.hasError('pattern')">Formato no válido</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="inputBox">
+            <input formControlName="email" type="email" required>
+            <i>Correo Electrónico</i>
+            <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+              <span *ngIf="registerForm.get('email')?.hasError('required')">Campo obligatorio</span>
+              <span *ngIf="registerForm.get('email')?.hasError('email')">Formato de correo no válido</span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="inputBox">
+            <input formControlName="password" type="password" required>
+            <i>Contraseña</i>
+            <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+              <span *ngIf="registerForm.get('password')?.hasError('required')">Campo obligatorio</span>
+              <span *ngIf="registerForm.get('password')?.hasError('minlength')">Debe tener al menos 6 caracteres</span>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="inputBox">
+            <input formControlName="confirmPassword" type="password" required>
+            <i>Confirmar Contraseña</i>
+            <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+              <span *ngIf="registerForm.hasError('mismatch')">Las contraseñas deben coincidir</span>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="inputBox">
+            <input type="submit" value="Registrar" [disabled]="registerForm.invalid || isLoading">
+          </div>
+
+          <!-- General Error Message -->
+          <div *ngIf="message" class="error-message">{{ message }}</div>
         </div>
-        <div class="inputBox">
-          <input type="tel" required>
-          <i>Teléfono</i>
-        </div>
-        <div class="inputBox">
-          <input type="email" required>
-          <i>Correo Electrónico</i>
-        </div>
-        <div class="inputBox">
-          <input type="password" required>
-          <i>Contraseña</i>
-        </div>
-        <div class="inputBox">
-          <input type="password" required>
-          <i>Confirmar Contraseña</i>
-        </div>
-        <div class="inputBox">
-          <input type="submit" value="Registrar">
-        </div>
-      </div>
+      </form>
     </div>
   </div>
+
 </section>
