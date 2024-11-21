@@ -51,7 +51,8 @@ export class RegisterComponent {
     const { username, telephone, email, password } = this.registerForm.value;
 
     const roleType = Role.User;
-    const roleId = roleType === Role.User ? 1 : 2;
+    //const roleId = roleType === Role.User ? 1 : 2;
+    const roleId = 2;
 
     const newUser = {
       username,
