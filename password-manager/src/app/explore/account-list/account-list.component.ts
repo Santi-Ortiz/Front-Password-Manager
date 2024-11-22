@@ -135,26 +135,22 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.usernameFromApp &&
       this.tempAccount.password
     ) {
-      this.appService.addApp(this.tempAccount.app).subscribe({
-        next: (newApp) => {
-          this.tempAccount!.app.appId = 0;
-          this.accountService.addAccount(this.tempAccount!).subscribe({
-            next: (response) => {
-              console.log(response); // Aquí puedes manejar el mensaje si es texto plano
-              this.accounts.unshift(this.tempAccount!);
-              this.tempAccount = null;
-              this.isAdding = false;
-            },
-            error: (err) => console.error('Error al agregar la cuenta:', err),
-          });
-
+      // Llamar directamente a addAccount con la estructura completa
+      this.accountService.addAccount(this.tempAccount!).subscribe({
+        next: (response) => {
+          console.log(response); // Manejar la respuesta
+          this.accounts.unshift(this.tempAccount!); // Agregar al inicio de la lista
+          this.tempAccount = null; // Limpiar los datos temporales
+          this.isAdding = false; // Cerrar el modo de agregar
+          alert('Cuenta creada exitosamente.');
         },
-        error: (err) => console.error(err),
+        error: (err) => console.error('Error al agregar la cuenta:', err),
       });
     } else {
       alert('Por favor completa todos los campos.');
     }
   }
+
 
   deleteAccount(account: Account): void {
     this.accountService.deleteAccount(account.accountId).subscribe({
