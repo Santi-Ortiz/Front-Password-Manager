@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Quicksand", sans-serif;
+  font-family: 'poppins', sans-serif;
 }
 body {
   display: flex;
@@ -156,9 +156,40 @@ input[type="submit"]:active {
   }
 }
 
-.error-message {
-  color: #ff4d4d; /* Rojo suave */
-  font-weight: 500; /* Negrilla ligera */
-  font-size: 0.9em;
+.message {
+  color: #2C7359;
+  font-weight: 500;
+  font-size: 1.2em;
+  font-size: bold;
   margin-top: 5px;
+}
+
+.inputBox p {
+  color: #cc0000;
+  font-size: 1.0em;
+  margin-top: 5px;
+  font-family: 'poppins', sans-serif;
+  font-size: bold;
+}
+
+section .signin  {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px; 
+  border-radius: 5px;
+  margin: 40px 40px;
+}
+
+
+section .signin .content .form .inputBox input[type="submit"] {
+  padding: 15px; 
+  background: #0066da;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  text-align: center;
+  line-height: 1.5em;
+  border: none; 
+  border-radius: 5px;
 }

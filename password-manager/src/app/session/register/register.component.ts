@@ -64,7 +64,7 @@ export class RegisterComponent {
 
     this.authService.register(newUser).subscribe({
       next: () => {
-        this.message = 'Usuario creado exitosamente.';
+        this.message = 'Usuario creado exitosamente.\n Revisa tu correo para activar tu cuenta.';
         this.registerForm.reset();
       },
       error: (err) => {
