@@ -12,7 +12,7 @@
       alt="Add/Close Icon"
       class="plus-icon"
       (click)="toggleAdd()"
-    >
+    />
     <div class="token-section">
       <div *ngIf="!isTokenRequested; else tokenForm">
         <button class="btn-token" (click)="requestToken()">Pedir Token</button>
@@ -32,9 +32,11 @@
           (click)="validateToken()"
           [disabled]="isTokenValid"
         >
-        Validar
+          Validar
         </button>
-        <p class="validation-message" *ngIf="validationMessage">{{ validationMessage }}</p>
+        <p class="validation-message" *ngIf="validationMessage">
+          {{ validationMessage }}
+        </p>
       </ng-template>
     </div>
     <div class="logout-section">
@@ -54,43 +56,118 @@
     </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let account of accounts; let i = index">
-        <td>
-          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.name" />
-          <span *ngIf="editingIndex !== i">{{ account.app.name }}</span>
-        </td>
-        <td>
-          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.usernameFromApp" />
-          <span *ngIf="editingIndex !== i">{{ account.usernameFromApp }}</span>
-        </td>
-        <td>
-          <div class="password-container">
-            <input *ngIf="isTokenValid" [type]="showPassword[i] ? 'text' : 'password'" [(ngModel)]="account.password" [readonly]="editingIndex !== i" />
-            <span *ngIf="!isTokenValid">********</span>
-            <img *ngIf="isTokenValid" src="assets/images/eye.png" alt="Show Password Icon" class="eye-icon" (click)="togglePasswordVisibility(i)" />
-          </div>
-        </td>
-        <td>
-          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.url" />
-          <span *ngIf="editingIndex !== i">{{ account.app.url }}</span>
-        </td>
-        <td>
-          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.description" />
-          <span *ngIf="editingIndex !== i">{{ account.app.description }}</span>
-        </td>
-        <td>
-          <img *ngIf="editingIndex !== i" src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" (click)="deleteAccount(account)" />
-          <img *ngIf="editingIndex !== i" src="assets/images/edit.png" alt="Edit Icon" class="edit-icon" (click)="editAccount(i)" />
-          <img *ngIf="editingIndex === i" src="assets/images/check.png" alt="Save Icon" class="check-icon" (click)="saveAccount(account)" />
-        </td>
-      </tr>
+    <tr *ngFor="let account of accounts; let i = index">
+      <td>
+        <input
+          *ngIf="editingIndex === i"
+          type="text"
+          [(ngModel)]="account.app.name"
+        />
+        <span *ngIf="editingIndex !== i">{{ account.app.name }}</span>
+      </td>
+      <td>
+        <input
+          *ngIf="editingIndex === i"
+          type="text"
+          [(ngModel)]="account.usernameFromApp"
+        />
+        <span *ngIf="editingIndex !== i">{{ account.usernameFromApp }}</span>
+      </td>
+      <td>
+        <div class="password-container">
+          <input
+            *ngIf="isTokenValid"
+            [type]="showPassword[i] ? 'text' : 'password'"
+            [(ngModel)]="account.password"
+            [readonly]="editingIndex !== i"
+          />
+          <span *ngIf="!isTokenValid">********</span>
+          <img
+            *ngIf="isTokenValid"
+            src="assets/images/eye.png"
+            alt="Show Password Icon"
+            class="eye-icon"
+            (click)="togglePasswordVisibility(i)"
+          />
+        </div>
+      </td>
+      <td>
+        <input
+          *ngIf="editingIndex === i"
+          type="text"
+          [(ngModel)]="account.app.url"
+        />
+        <span *ngIf="editingIndex !== i">{{ account.app.url }}</span>
+      </td>
+      <td>
+        <input
+          *ngIf="editingIndex === i"
+          type="text"
+          [(ngModel)]="account.app.description"
+        />
+        <span *ngIf="editingIndex !== i">{{ account.app.description }}</span>
+      </td>
+      <td>
+        <img
+          *ngIf="editingIndex !== i"
+          src="assets/images/delete.png"
+          alt="Delete Icon"
+          class="delete-icon"
+          (click)="deleteAccount(account)"
+        />
+        <img
+          *ngIf="editingIndex !== i"
+          src="assets/images/edit.png"
+          alt="Edit Icon"
+          class="edit-icon"
+          (click)="editAccount(i)"
+        />
+        <img
+          *ngIf="editingIndex === i"
+          src="assets/images/check.png"
+          alt="Save Icon"
+          class="check-icon"
+          (click)="saveAccount(account)"
+        />
+      </td>
+    </tr>
 
     <tr *ngIf="tempAccount" class="temporary-row">
-      <td><input type="text" [(ngModel)]="tempAccount.app.name" placeholder="Sitio" /></td>
-      <td><input type="text" [(ngModel)]="tempAccount.usernameFromApp" placeholder="Usuario" /></td>
-      <td><input type="password" [(ngModel)]="tempAccount.password" placeholder="Contraseña" /></td>
-      <td><input type="text" [(ngModel)]="tempAccount.app.url" placeholder="Url referida" /></td>
-      <td><input type="text" [(ngModel)]="tempAccount.app.description" placeholder="Info" /></td>
+      <td>
+        <input
+          type="text"
+          [(ngModel)]="tempAccount.app.name"
+          placeholder="Sitio"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          [(ngModel)]="tempAccount.usernameFromApp"
+          placeholder="Usuario"
+        />
+      </td>
+      <td>
+        <input
+          type="password"
+          [(ngModel)]="tempAccount.password"
+          placeholder="Contraseña"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          [(ngModel)]="tempAccount.app.url"
+          placeholder="Url referida"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          [(ngModel)]="tempAccount.app.description"
+          placeholder="Info"
+        />
+      </td>
       <td>
         <img
           src="assets/images/check.png"

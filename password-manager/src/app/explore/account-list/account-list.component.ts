@@ -2,25 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AccountService } from "../../services/account.service";
-import { TwofaService } from "../../services/twofa.service";
-import { Account } from "../../models/account";
-import { User } from "../../models/user";
-import { UserService } from "../../services/user.service";
+import { AccountService } from '../../services/account.service';
+import { TwofaService } from '../../services/twofa.service';
+import { Account } from '../../models/account';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user.service';
 import { AppService } from '../../services/app.service';
 import { App } from '../../models/app';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account-list',
   standalone: true,
-  imports: [
-    NgIf,
-    NgForOf,
-    FormsModule
-  ],
+  imports: [NgIf, NgForOf, FormsModule],
   templateUrl: './account-list.component.html',
-  styleUrls: ['./account-list.component.css']
+  styleUrls: ['./account-list.component.css'],
 })
 export class AccountListComponent implements OnInit {
   username: string | null = null;
@@ -36,9 +32,16 @@ export class AccountListComponent implements OnInit {
   userActual: User | null = null;
   isTokenValid: boolean = false;
   timeRemaining: number = 300;
-  app: App | null = null;
   editingIndex: number | null = null;
   showPassword: boolean[] = [];
+  message: string = '';
+
+  app: App = {
+    appId: 0,
+    name: '',
+    description: '',
+    url: '',
+  };
 
   private countdownInterval: any;
 
@@ -55,31 +58,18 @@ export class AccountListComponent implements OnInit {
     this.username = this.authService.getUsername();
     this.userId = this.authService.getUserId();
 
-    console.log(this.userId);
-
     if (this.userId !== null) {
-      // Suscribirse al observable para obtener el usuario actual
       this.userService.getUserById(this.userId).subscribe({
         next: (user) => {
           this.userActual = user;
-          this.userActual.userId = this.userId!;
         },
-        error: (err) => {
-          console.error('Error al obtener el usuario:', err);
-          this.userActual = null;
-        }
+        error: (err) => console.error(err),
       });
 
       this.accountService.getAccountsByUserId(this.userId).subscribe({
-        next: (accounts) => {
-          this.accounts = accounts;
-          console.log(this.accounts);
-        },
-        error: (err) => {
-          console.error("Error al cargar las cuentas: ", err);
-        }
+        next: (accounts) => (this.accounts = accounts),
+        error: (err) => console.error(err),
       });
-
     }
   }
 
@@ -87,51 +77,35 @@ export class AccountListComponent implements OnInit {
     this.showPassword[index] = !this.showPassword[index];
   }
 
-
   toggleAdd(): void {
     this.isAdding = !this.isAdding;
-    if (this.isAdding) {
-      this.app = {
-        appId: 0,
-        name: '',
-        description: '',
-        url: ''
-      }
-      this.tempAccount = {
+    this.tempAccount = this.isAdding
+      ? {
         accountId: 0,
-        app: this.app!,
-        user: { userId: this.userActual!.userId, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
+        app: { appId: 0, name: '', description: '', url: '' },
+        user: this.userActual!,
         usernameFromApp: '',
-        password: ''
-      };
-      console.log(this.tempAccount);
-    } else {
-      this.tempAccount = null;
-    }
+        password: '',
+      }
+      : null;
   }
 
-  // Llama al endpoint para generar un nuevo token
   requestToken(): void {
-    if (this.userId) {
-      this.twofaService.createToken(this.userActual).subscribe({
-        next: () => {
-          this.isTokenRequested = true;
-          this.validationMessage = '';
-          this.remainingAttempts = 3;
-          this.accountLocked = false;
-          alert('Token generado y enviado a tu correo.');
-        },
-        error: (err) => {
-          console.error('Error al generar el token:', err);
-          alert('No se pudo generar el token. Inténtalo de nuevo.');
-        }
-      });
-    }
+    this.twofaService.createToken(this.userActual).subscribe({
+      next: () => {
+        this.isTokenRequested = true;
+        this.validationMessage = '';
+        this.remainingAttempts = 3;
+        this.accountLocked = false;
+        alert('Token generado y enviado a tu correo.');
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   validateToken(): void {
     if (this.accountLocked) {
-      this.validationMessage = 'Su cuenta está bloqueada por 5 minutos.';
+      this.validationMessage = 'Su cuenta está bloqueada.';
       return;
     }
 
@@ -139,28 +113,17 @@ export class AccountListComponent implements OnInit {
       next: (isValid) => {
         if (isValid) {
           this.startCountdown();
-          this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
           this.isTokenValid = true;
         } else {
           this.remainingAttempts--;
-          if (this.remainingAttempts > 0) {
-            this.validationMessage = `Token inválido, tiene ${this.remainingAttempts} intento(s) más.`;
-          } else {
-            this.validationMessage = 'Su cuenta estará bloqueada durante 5 minutos por seguridad.';
-            this.accountLocked = true;
-
-            setTimeout(() => {
-              this.accountLocked = false;
-              this.remainingAttempts = 3;
-              this.validationMessage = '';
-            }, 5 * 60 * 1000);
-          }
+          this.validationMessage =
+            this.remainingAttempts > 0
+              ? `Token inválido. ${this.remainingAttempts} intento(s) restante(s).`
+              : 'Cuenta bloqueada por seguridad.';
+          if (!this.remainingAttempts) this.lockAccount();
         }
       },
-      error: (err) => {
-        console.error('Error al validar el token:', err);
-        alert('Error al validar el token.');
-      }
+      error: (err) => console.error(err),
     });
   }
 
@@ -172,43 +135,31 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.usernameFromApp &&
       this.tempAccount.password
     ) {
-      this.appService.addApp(this.app!).subscribe({
+      this.appService.addApp(this.tempAccount.app).subscribe({
         next: (newApp) => {
-          this.tempAccount!.app.appId = newApp.appId? newApp.appId : 0;
-          console.log(this.tempAccount?.app.appId);
-          this.tempAccount!.user!.userId = this.userId!;
-
+          this.tempAccount!.app.appId = 0;
           this.accountService.addAccount(this.tempAccount!).subscribe({
-            next: (newAccount) => {
-              this.accounts.unshift(newAccount);
+            next: (response) => {
+              console.log(response); // Aquí puedes manejar el mensaje si es texto plano
+              this.accounts.unshift(this.tempAccount!);
               this.tempAccount = null;
               this.isAdding = false;
             },
-            error: (err) => {
-              console.error("Error al agregar la cuenta: ", err);
-            }
+            error: (err) => console.error('Error al agregar la cuenta:', err),
           });
+
         },
-        error: (err) => {
-          console.error("Error al agregar la aplicación: ", err);
-        }
+        error: (err) => console.error(err),
       });
     } else {
-      alert("Por favor, completa todos los campos antes de agregar una cuenta.");
+      alert('Por favor completa todos los campos.');
     }
   }
 
   deleteAccount(account: Account): void {
-    const accountId = account.accountId;
-    console.log("Borrando cuenta "+accountId+" en ts");
-    this.accountService.deleteAccount(accountId).subscribe({
-      next: () => {
-        this.accounts = this.accounts.filter(a => a.accountId !== accountId);
-        console.log("Cuenta eliminada con éxito.");
-      },
-      error: (err) => {
-        console.error("Error al eliminar la cuenta: ", err);
-      }
+    this.accountService.deleteAccount(account.accountId).subscribe({
+      next: () => (this.accounts = this.accounts.filter((a) => a !== account)),
+      error: (err) => console.error(err),
     });
   }
 
@@ -218,13 +169,8 @@ export class AccountListComponent implements OnInit {
 
   saveAccount(account: Account): void {
     this.accountService.updateAccount(account, account.accountId).subscribe({
-      next: (updatedAccount) => {
-        this.accounts[this.editingIndex!] = updatedAccount;
-        this.editingIndex = null;
-      },
-      error: (err) => {
-        console.error("Error al actualizar la cuenta: ", err);
-      }
+      next: () => (this.editingIndex = null),
+      error: (err) => console.error(err),
     });
   }
 
@@ -232,20 +178,20 @@ export class AccountListComponent implements OnInit {
     this.timeRemaining = 300;
     this.countdownInterval = setInterval(() => {
       this.timeRemaining--;
-      this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
-
-      if (this.timeRemaining <= 0) {
+      if (!this.timeRemaining) {
         clearInterval(this.countdownInterval);
         this.isTokenValid = false;
-        this.validationMessage = '';
       }
     }, 1000);
   }
 
-  private formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
+  private lockAccount(): void {
+    this.accountLocked = true;
+    setTimeout(() => {
+      this.accountLocked = false;
+      this.remainingAttempts = 3;
+      this.validationMessage = '';
+    }, 5 * 60 * 1000);
   }
 
   logout(): void {

@@ -14,7 +14,7 @@ export class AppService {
 
   private httpOptions: { headers: HttpHeaders } = { headers: new HttpHeaders() };
 
-  constructor(private http: HttpClient, private authService: AuthService) { 
+  constructor(private http: HttpClient, private authService: AuthService) {
     this.setAuthHeaders();
   }
 
@@ -33,14 +33,14 @@ export class AppService {
   }
 
   addApp(app: App): Observable<App> {
-    return this.http.post<App>(`${this.apiUrl}/add`, app);
+    return this.http.post<App>(`${this.apiUrl}/add`, app, this.httpOptions);
   }
 
   deleteApp(appId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${appId}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${appId}`, this.httpOptions);
   }
 
   updateApp(app: App, appId: number): Observable<App> {
-    return this.http.put<App>(`${this.apiUrl}/update/${appId}`, app);
+    return this.http.put<App>(`${this.apiUrl}/update/${appId}`, app, this.httpOptions);
   }
 }
