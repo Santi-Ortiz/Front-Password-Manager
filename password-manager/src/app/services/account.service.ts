@@ -33,15 +33,16 @@ export class AccountService {
   }
 
   addAccount(account: Account): Observable<Account> {
-    return this.http.post<Account>(`${this.apiUrl}/add`, account);
+    return this.http.post<Account>(`${this.apiUrl}/add`, account, this.httpOptions);
   }
 
   deleteAccount(accountId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${accountId}`);
+    console.log("Borrando cuenta en servicio "+accountId+" con ruta "+`${this.apiUrl}/delete/${accountId}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${accountId}`, this.httpOptions);
   }
 
   updateAccount(account: Account, accountId: number): Observable<Account> {
-    return this.http.put<Account>(`${this.apiUrl}/update/${accountId}`, account);
+    return this.http.put<Account>(`${this.apiUrl}/update/${accountId}`, account, this.httpOptions);
   }
 
 }

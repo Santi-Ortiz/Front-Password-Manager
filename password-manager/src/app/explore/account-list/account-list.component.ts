@@ -45,7 +45,7 @@ export class AccountListComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private accountService: AccountService,
-    private twofaService: TwofaService, 
+    private twofaService: TwofaService,
     private userService: UserService,
     private appService: AppService,
     private router: Router
@@ -174,14 +174,14 @@ export class AccountListComponent implements OnInit {
     ) {
       this.appService.addApp(this.app!).subscribe({
         next: (newApp) => {
-          this.tempAccount!.app.appId = newApp.appId? newApp.appId : 0; 
+          this.tempAccount!.app.appId = newApp.appId? newApp.appId : 0;
           console.log(this.tempAccount?.app.appId);
           this.tempAccount!.user!.userId = this.userId!;
 
           this.accountService.addAccount(this.tempAccount!).subscribe({
             next: (newAccount) => {
               this.accounts.unshift(newAccount);
-              this.tempAccount = null; 
+              this.tempAccount = null;
               this.isAdding = false;
             },
             error: (err) => {
@@ -200,6 +200,7 @@ export class AccountListComponent implements OnInit {
 
   deleteAccount(account: Account): void {
     const accountId = account.accountId;
+    console.log("Borrando cuenta "+accountId+" en ts");
     this.accountService.deleteAccount(accountId).subscribe({
       next: () => {
         this.accounts = this.accounts.filter(a => a.accountId !== accountId);
@@ -235,8 +236,8 @@ export class AccountListComponent implements OnInit {
 
       if (this.timeRemaining <= 0) {
         clearInterval(this.countdownInterval);
-        this.isTokenValid = false; 
-        this.validationMessage = ''; 
+        this.isTokenValid = false;
+        this.validationMessage = '';
       }
     }, 1000);
   }
@@ -248,7 +249,7 @@ export class AccountListComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout(); 
-    this.router.navigate(['/login']); 
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
