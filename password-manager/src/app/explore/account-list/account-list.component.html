@@ -61,8 +61,11 @@
           <span *ngIf="editingIndex !== i">{{ account.usernameFromApp }}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" type="password" [(ngModel)]="account.password" />
-          <span *ngIf="editingIndex !== i">{{ account.password }}</span>
+          <div class="password-container">
+            <input *ngIf="isTokenValid" [type]="showPassword[i] ? 'text' : 'password'" [(ngModel)]="account.password" [readonly]="editingIndex !== i" />
+            <span *ngIf="!isTokenValid">********</span>
+            <img *ngIf="isTokenValid" src="assets/images/eye.png" alt="Show Password Icon" class="eye-icon" (click)="togglePasswordVisibility(i)" />
+          </div>
         </td>
         <td>
           <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.url" />

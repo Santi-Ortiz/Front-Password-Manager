@@ -37,6 +37,7 @@ export class AccountListComponent implements OnInit {
   timeRemaining: number = 300;
   app: App | null = null;
   editingIndex: number | null = null;
+  showPassword: boolean[] = [];
 
   private countdownInterval: any;
 
@@ -78,6 +79,10 @@ export class AccountListComponent implements OnInit {
       });
 
     }
+  }
+
+  togglePasswordVisibility(index: number): void {
+    this.showPassword[index] = !this.showPassword[index];
   }
 
 

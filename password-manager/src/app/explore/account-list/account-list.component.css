@@ -294,3 +294,25 @@ h2 a {
 .btn-token:hover, .btn-validate:hover {
   background-color: #5b009e; 
 }
+
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%; 
+}
+
+.password-container input[type="password"], 
+.password-container input[type="text"] {
+  flex: 1;
+  color: #ccc;
+  width: 100%; 
+  padding-right: 10px; 
+}
+
+.eye-icon {
+  margin-left: 10px; 
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
