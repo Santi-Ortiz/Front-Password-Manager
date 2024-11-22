@@ -61,6 +61,9 @@ export class AccountListComponent implements OnInit, OnDestroy {
     this.username = this.authService.getUsername();
     this.userId = this.authService.getUserId();
 
+    // Restaurar el estado de bloqueo al cargar
+    this.restoreLockState();
+
     if (this.userId !== null) {
       this.userService.getUserById(this.userId).subscribe({
         next: (user) => {
@@ -216,15 +219,20 @@ export class AccountListComponent implements OnInit, OnDestroy {
     this.lockTimeRemaining = 300;
     this.updateLockMessage();
 
+    // Guardar estado de bloqueo en localStorage
+    this.saveLockState();
+
     this.lockTimeout = setInterval(() => {
       this.lockTimeRemaining--;
 
       if (this.lockTimeRemaining > 0) {
         this.updateLockMessage();
+        this.saveLockState(); // Actualizar el tiempo restante en localStorage
       } else {
         clearInterval(this.lockTimeout);
         this.accountLocked = false;
         this.validationMessage = '';
+        localStorage.removeItem('lockState'); // Eliminar el bloqueo cuando termine
       }
     }, 1000);
   }
@@ -235,8 +243,50 @@ export class AccountListComponent implements OnInit, OnDestroy {
     this.validationMessage = `Su cuenta estará bloqueada por ${minutes}m ${seconds}s.`;
   }
 
+  private restoreLockState(): void {
+    const lockStateString = localStorage.getItem('lockState');
+    if (lockStateString) {
+      const lockState = JSON.parse(lockStateString);
+      const timeElapsed = Math.floor((Date.now() - lockState.lockTimestamp) / 1000);
+
+      // Calcular tiempo restante del bloqueo
+      const timeRemaining = lockState.lockTimeRemaining - timeElapsed;
+
+      if (timeRemaining > 0) {
+        this.accountLocked = lockState.accountLocked;
+        this.lockTimeRemaining = timeRemaining;
+        this.updateLockMessage();
+
+        this.lockTimeout = setInterval(() => {
+          this.lockTimeRemaining--;
+
+          if (this.lockTimeRemaining > 0) {
+            this.updateLockMessage();
+            this.saveLockState();
+          } else {
+            clearInterval(this.lockTimeout);
+            this.accountLocked = false;
+            this.validationMessage = '';
+            localStorage.removeItem('lockState');
+          }
+        }, 1000);
+      } else {
+        localStorage.removeItem('lockState'); // Si ya pasó el bloqueo, eliminar el estado
+      }
+    }
+  }
+
   showTokenPopup(): void {
     alert('Debes pedir un token y activarlo para realizar esta acción.');
+  }
+
+  private saveLockState(): void {
+    const lockState = {
+      accountLocked: this.accountLocked,
+      lockTimeRemaining: this.lockTimeRemaining,
+      lockTimestamp: Date.now(), // Guardar el timestamp actual
+    };
+    localStorage.setItem('lockState', JSON.stringify(lockState));
   }
 
   ngOnDestroy(): void {
