@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from "../../services/account.service";
-import { Account } from "../../models/account"; // Asegúrate de usar el tipo correcto
+import { Account } from "../../models/account";
 
 @Component({
   selector: 'app-account-list',
@@ -20,7 +20,9 @@ export class AccountListComponent implements OnInit {
   username: string | null = null;
   userId: number | null = null;
   isAdding: boolean = false;
-  accounts: Account[] = []; // Cambia el tipo a Account[]
+  isTokenRequested: boolean = false; // Estado para el botón "Pedir Token"
+  tokenValue: string = ''; // Valor ingresado del token
+  accounts: Account[] = [];
   tempAccount: Account | null = null;
 
   constructor(private authService: AuthService, private accountService: AccountService) {}
@@ -47,7 +49,7 @@ export class AccountListComponent implements OnInit {
     if (this.isAdding) {
       this.tempAccount = {
         app: { name: '', description: '', url: '' },
-        user: { id: 0, username: '', password: '', email: '', role: '' }, // Objeto `User` válido
+        user: { id: 0, username: '', password: '', email: '', role: '' },
         usernameFromApp: '',
         password: ''
       };
@@ -56,6 +58,9 @@ export class AccountListComponent implements OnInit {
     }
   }
 
+  requestToken(): void {
+    this.isTokenRequested = true; // Cambia el estado para mostrar el campo de token
+  }
 
   confirmAdd(): void {
     if (this.tempAccount) {

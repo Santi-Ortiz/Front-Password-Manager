@@ -1,11 +1,22 @@
 <div class="table-container">
-  <img
-    [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
-    alt="Add/Close Icon"
-    class="plus-icon"
-    (click)="toggleAdd()"
-  >
+  <!-- Botón Plus y Pedir Token en la cabecera -->
+  <div class="table-header">
+    <img
+      [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
+      alt="Add/Close Icon"
+      class="plus-icon"
+      (click)="toggleAdd()"
+    >
+    <div *ngIf="!isTokenRequested; else tokenForm">
+      <button class="btn-token" (click)="requestToken()">Pedir Token</button>
+    </div>
+    <ng-template #tokenForm>
+      <label for="token-input" class="token-label">Token:</label>
+      <input id="token-input" type="text" [(ngModel)]="tokenValue" class="token-input" placeholder="Ingrese el token" />
+    </ng-template>
+  </div>
 
+  <!-- Título -->
   <h1>
     <span class="yellow">CryptSafe</span>
   </h1>
@@ -13,48 +24,49 @@
     <span class="red">Bienvenido de vuelta, {{ username || 'Usuario' }}</span>
   </h1>
 
+  <!-- Tabla -->
   <table class="container">
     <thead>
-      <tr>
-        <th><h1>Sitio</h1></th>
-        <th><h1>Usuario</h1></th>
-        <th><h1>Contraseña</h1></th>
-        <th><h1>Url referida</h1></th>
-        <th><h1>Info</h1></th>
-        <th><h1>Acciones</h1></th>
-      </tr>
+    <tr>
+      <th><h1>Sitio</h1></th>
+      <th><h1>Usuario</h1></th>
+      <th><h1>Contraseña</h1></th>
+      <th><h1>Url referida</h1></th>
+      <th><h1>Info</h1></th>
+      <th><h1>Acciones</h1></th>
+    </tr>
     </thead>
     <tbody>
+    <!-- Cuentas cargadas -->
+    <tr *ngFor="let account of accounts; let i = index">
+      <td>{{ account.app.name }}</td>
+      <td>{{ account.usernameFromApp }}</td>
+      <td>{{ account.password }}</td>
+      <td>{{ account.app.url }}</td>
+      <td>{{ account.app.description }}</td>
+      <td>
+        <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" />
+        <img src="assets/images/edit.png" alt="Edit Icon" class="check-icon" />
+        <img src="assets/images/check.png" alt="Edit Icon" class="edit-icon" />
+      </td>
+    </tr>
 
-      <tr *ngFor="let account of accounts; let i = index">
-        <td>{{ account.app.name }}</td>
-        <td>{{ account.usernameFromApp }}</td>
-        <td>{{ account.password }}</td>
-        <td>{{ account.app.url }}</td>
-        <td>{{ account.app.description }}</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" />
-          <img src="assets/images/edit.png" alt="Edit Icon" class="check-icon" />
-          <img src="assets/images/check.png" alt="Edit Icon" class="edit-icon" />
-        </td>
-      </tr>
-
-      <tr *ngIf="tempAccount" class="temporary-row">
-        <td><input type="text" [(ngModel)]="tempAccount.app.name" placeholder="Sitio" /></td>
-        <td><input type="text" [(ngModel)]="tempAccount.usernameFromApp" placeholder="Usuario" /></td>
-        <td><input type="password" [(ngModel)]="tempAccount.password" placeholder="Contraseña" /></td>
-        <td><input type="text" [(ngModel)]="tempAccount.app.url" placeholder="Url referida" /></td>
-        <td><input type="text" [(ngModel)]="tempAccount.app.description" placeholder="Info" /></td>
-        <td>
-          <img
-            src="assets/images/check.png"
-            alt="Confirm Add Icon"
-            class="check-icon"
-            (click)="confirmAdd()"
-          />
-        </td>
-      </tr>
-
+    <!-- Fila temporal para agregar -->
+    <tr *ngIf="tempAccount" class="temporary-row">
+      <td><input type="text" [(ngModel)]="tempAccount.app.name" placeholder="Sitio" /></td>
+      <td><input type="text" [(ngModel)]="tempAccount.usernameFromApp" placeholder="Usuario" /></td>
+      <td><input type="password" [(ngModel)]="tempAccount.password" placeholder="Contraseña" /></td>
+      <td><input type="text" [(ngModel)]="tempAccount.app.url" placeholder="Url referida" /></td>
+      <td><input type="text" [(ngModel)]="tempAccount.app.description" placeholder="Info" /></td>
+      <td>
+        <img
+          src="assets/images/check.png"
+          alt="Confirm Add Icon"
+          class="check-icon"
+          (click)="confirmAdd()"
+        />
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
