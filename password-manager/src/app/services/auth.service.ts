@@ -92,6 +92,9 @@ export class AuthService {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_role');
     localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
   }
 
   public getToken(): string {

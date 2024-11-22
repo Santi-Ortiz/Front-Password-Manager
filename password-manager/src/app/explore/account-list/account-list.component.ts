@@ -9,6 +9,7 @@ import { User } from "../../models/user";
 import { UserService } from "../../services/user.service";
 import { AppService } from '../../services/app.service';
 import { App } from '../../models/app';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-account-list',
@@ -46,7 +47,8 @@ export class AccountListComponent implements OnInit {
     private accountService: AccountService,
     private twofaService: TwofaService, 
     private userService: UserService,
-    private appService: AppService
+    private appService: AppService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -243,5 +245,10 @@ export class AccountListComponent implements OnInit {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}m ${remainingSeconds}s`;
+  }
+
+  logout(): void {
+    this.authService.logout(); 
+    this.router.navigate(['/login']); 
   }
 }

@@ -318,3 +318,24 @@ h2 a {
   height: 20px;
   cursor: pointer;
 }
+
+.btn-logout {
+  background-color: #FF6347; 
+  color: white;
+  padding: 13px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 300px; 
+}
+
+.btn-logout:hover {
+  background-color: #FF4500;
+}
+
+.logout-section {
+  display: flex;
+  align-items: center;
+}
