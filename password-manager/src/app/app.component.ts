@@ -2,7 +2,7 @@ import {Component, Renderer2} from '@angular/core';
 import {NavigationEnd, RouterOutlet, Router} from '@angular/router';
 import {LoginComponent} from "./session/login/login.component";
 import {RegisterComponent} from "./session/register/register.component";
-import {AccountListComponent} from "./explore/account-list/account-list.component";
+import { AccountListComponent } from './explore/account-list/account-list.component';
 
 
 @Component({

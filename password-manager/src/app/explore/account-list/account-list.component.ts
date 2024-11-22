@@ -7,6 +7,8 @@ import { TwofaService } from "../../services/twofa.service";
 import { Account } from "../../models/account";
 import { User } from "../../models/user";
 import { UserService } from "../../services/user.service";
+import { AppService } from '../../services/app.service';
+import { App } from '../../models/app';
 
 @Component({
   selector: 'app-account-list',
@@ -27,25 +29,29 @@ export class AccountListComponent implements OnInit {
   tokenValue: string = '';
   accounts: Account[] = [];
   tempAccount: Account | null = null;
-  validationMessage: string = ''; // Mensaje de validación del token
-  remainingAttempts: number = 3; // Número de intentos restantes
-  accountLocked: boolean = false; // Indica si la cuenta está bloqueada
+  validationMessage: string = '';
+  remainingAttempts: number = 3;
+  accountLocked: boolean = false;
   userActual: User | null = null;
-  isTokenValid: boolean = false; // Bloquea campo y botón si el token es válido
-  timeRemaining: number = 300; // Tiempo restante en segundos (5 minutos)
+  isTokenValid: boolean = false;
+  timeRemaining: number = 300;
+  app: App | null = null;
 
   private countdownInterval: any;
 
   constructor(
     private authService: AuthService,
     private accountService: AccountService,
-    private twofaService: TwofaService, // Servicio de TwoFA
-    private userService: UserService
+    private twofaService: TwofaService, 
+    private userService: UserService,
+    private appService: AppService
   ) {}
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
     this.userId = this.authService.getUserId();
+
+    console.log(this.userId);
 
     if (this.userId !== null) {
       // Suscribirse al observable para obtener el usuario actual
@@ -77,9 +83,15 @@ export class AccountListComponent implements OnInit {
   toggleAdd(): void {
     this.isAdding = !this.isAdding;
     if (this.isAdding) {
+      this.app = {
+        appId: 0,
+        name: '',
+        description: '',
+        url: ''
+      }
       this.tempAccount = {
         accountId: 0,
-        app: { appId: 1, name: '', description: '', url: '' },
+        app: this.app!,
         user: { userId: this.userActual!.userId, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
         usernameFromApp: '',
         password: ''
@@ -152,16 +164,25 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.usernameFromApp &&
       this.tempAccount.password
     ) {
-      this.tempAccount.user!.userId = this.userId!;
+      this.appService.addApp(this.app!).subscribe({
+        next: (newApp) => {
+          this.tempAccount!.app.appId = newApp.appId? newApp.appId : 0; 
+          console.log(this.tempAccount?.app.appId);
+          this.tempAccount!.user!.userId = this.userId!;
 
-      this.accountService.addAccount(this.tempAccount).subscribe({
-        next: (newAccount) => {
-          this.accounts.unshift(newAccount);
-          this.tempAccount = null;
-          this.isAdding = false;
+          this.accountService.addAccount(this.tempAccount!).subscribe({
+            next: (newAccount) => {
+              this.accounts.unshift(newAccount);
+              this.tempAccount = null; 
+              this.isAdding = false;
+            },
+            error: (err) => {
+              console.error("Error al agregar la cuenta: ", err);
+            }
+          });
         },
         error: (err) => {
-          console.error("Error al agregar la cuenta: ", err);
+          console.error("Error al agregar la aplicación: ", err);
         }
       });
     } else {
