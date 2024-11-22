@@ -66,12 +66,10 @@ h2 a {
   padding-left: 2%;
 }
 
-/* Background-color of the odd rows */
 .container tr:nth-child(odd) {
   background-color: #323C50;
 }
 
-/* Background-color of the even rows */
 .container tr:nth-child(even) {
   background-color: #2C3446;
 }
@@ -116,7 +114,6 @@ h2 a {
   }
 }
 
-/* Icono "plus" y "close" se posicionan igual */
 .plus-icon {
   position: absolute;
   top: 6.5vw;
@@ -136,7 +133,6 @@ h2 a {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
 }
 
-/* Icons styling */
 .delete-icon, .check-icon, .edit-icon {
   width: 40px;
   height: 40px;
@@ -149,7 +145,6 @@ h2 a {
   opacity: 0.7;
 }
 
-/* Input fields styling in temp rows */
 .container input[type="text"] {
   width: 90%;
   padding: 5px;
@@ -169,7 +164,6 @@ h2 a {
   background-color: #464A52;
 }
 
-/* Buttons in action column */
 .container td img {
   width: 30px;
   height: 30px;
@@ -210,21 +204,18 @@ h2 a {
 
 
 
-/* Estilo para la fila temporal */
 .temporary-row {
-  background-color: rgba(255, 165, 0, 0.6); /* Naranja opaco */
-  color: #4D4D4D; /* Gris oscuro para el texto */
-  font-style: italic; /* Opcional, resalta que es temporal */
+  background-color: rgba(255, 165, 0, 0.6); 
+  color: #4D4D4D;
+  font-style: italic; 
   text-align: left;
 }
 
-/* Aseguramos que no haya sombra */
 .temporary-row td {
   box-shadow: none;
 }
 
-/* Cambios al pasar el cursor */
 .temporary-row:hover {
-  background-color: rgba(255, 140, 0, 0.8); /* Naranja más fuerte */
+  background-color: rgba(255, 140, 0, 0.8);
   box-shadow: none;
 }

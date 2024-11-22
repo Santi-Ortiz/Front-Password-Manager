@@ -1,48 +1,49 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import {NgForOf, NgIf} from "@angular/common";
+import { NgForOf, NgIf} from '@angular/common';
+import { FormsModule } from '@angular/forms'; 
 
 @Component({
   selector: 'app-account-list',
   standalone: true,
   imports: [
     NgIf,
-    NgForOf
+    NgForOf,
+    FormsModule 
   ],
   templateUrl: './account-list.component.html',
   styleUrls: ['./account-list.component.css']
 })
 export class AccountListComponent implements OnInit {
   username: string | null = null;
-  isAdding: boolean = false; // Controla si se está agregando una nueva fila
-  accounts: any[] = []; // Lista de cuentas (debe ser reemplazada con datos reales)
+  isAdding: boolean = false;
+  accounts: any[] = [];
+  tempAccount: any | null = null;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Recuperar el nombre del usuario desde el servicio AuthService
     this.username = this.authService.getUsername();
-
-    // Simula datos iniciales (deberían ser obtenidos de una API)
     this.accounts = [
-      { site: 'Google', user: '9518', password: '6369', url: '01:32:50', info: '01:32:50' },
-      { site: 'Twitter', user: '7326', password: '10437', url: '00:51:22', info: '01:32:50' },
-      // Más registros...
+      { site: 'Google', user: '9518', password: '6369', url: 'https://google.com', info: 'Cuenta principal' },
+      { site: 'Twitter', user: '7326', password: '10437', url: 'https://twitter.com', info: 'Cuenta secundaria' }
     ];
   }
 
-  /**
-   * Alterna entre agregar una nueva fila o cancelar la operación.
-   */
   toggleAdd(): void {
     this.isAdding = !this.isAdding;
-
     if (this.isAdding) {
-      // Agrega una fila temporal al inicio
-      this.accounts.unshift({ site: '', user: '', password: '', url: '', info: 'Temporal' });
+      this.tempAccount = { site: '', user: '', password: '', url: '', info: '' };
     } else {
-      // Elimina la fila temporal si no se completa
-      this.accounts.shift();
+      this.tempAccount = null;
+    }
+  }
+
+  confirmAdd(): void {
+    if (this.tempAccount) {
+      this.accounts.unshift(this.tempAccount);
+      this.tempAccount = null;
+      this.isAdding = false;
     }
   }
 }

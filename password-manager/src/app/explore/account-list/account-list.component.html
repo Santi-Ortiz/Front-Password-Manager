@@ -1,50 +1,60 @@
 <div class="table-container">
-  <!-- Botón de agregar/cerrar -->
   <img
     [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
     alt="Add/Close Icon"
     class="plus-icon"
-    (click)="toggleAdd()">
+    (click)="toggleAdd()"
+  >
 
-  <!-- Título y bienvenida -->
   <h1>
-    <span class="yellow">
-      CryptSafe
-    </span>
+    <span class="yellow">CryptSafe</span>
   </h1>
   <h1>
-    <span class="red">
-      Bienvenido de vuelta, {{ username || 'Usuario' }}
-    </span>
+    <span class="red">Bienvenido de vuelta, {{ username || 'Usuario' }}</span>
   </h1>
 
-  <!-- Tabla de datos -->
   <table class="container">
     <thead>
-    <tr>
-      <th><h1>Sitio</h1></th>
-      <th><h1>Usuario</h1></th>
-      <th><h1>Contraseña</h1></th>
-      <th><h1>Url referida</h1></th>
-      <th><h1>Info</h1></th>
-      <th><h1>Acciones</h1></th>
-    </tr>
+      <tr>
+        <th><h1>Sitio</h1></th>
+        <th><h1>Usuario</h1></th>
+        <th><h1>Contraseña</h1></th>
+        <th><h1>Url referida</h1></th>
+        <th><h1>Info</h1></th>
+        <th><h1>Acciones</h1></th>
+      </tr>
     </thead>
     <tbody>
-    <!-- Itera sobre las cuentas y aplica clase temporal a la primera fila cuando sea temporal -->
-    <tr *ngFor="let account of accounts; let i = index" [class.temporary-row]="isAdding && i === 0">
-      <td>{{ account.site || '' }}</td>
-      <td>{{ account.user || '' }}</td>
-      <td>{{ account.password || '' }}</td>
-      <td>{{ account.url || '' }}</td>
-      <td>{{ account.info || '' }}</td>
-      <td>
-        <!-- Oculta las acciones para la fila temporal -->
-        <img *ngIf="!isAdding || i !== 0" src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
-        <img *ngIf="!isAdding || i !== 0" src="assets/images/edit.png" alt="Edit Icon" class="delete-icon">
-      </td>
-    </tr>
+    
+      <tr *ngFor="let account of accounts; let i = index">
+        <td>{{ account.site }}</td>
+        <td>{{ account.user }}</td>
+        <td>{{ account.password }}</td>
+        <td>{{ account.url }}</td>
+        <td>{{ account.info }}</td>
+        <td>
+          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" />
+          <img src="assets/images/edit.png" alt="Edit Icon" class="delete-icon" />
+          <img src="assets/images/check.png" alt="Edit Icon" class="delete-icon" />
+        </td>
+      </tr>
+
+      <tr *ngIf="tempAccount" class="temporary-row">
+        <td><input type="text" [(ngModel)]="tempAccount.site" placeholder="Sitio" /></td>
+        <td><input type="text" [(ngModel)]="tempAccount.user" placeholder="Usuario" /></td>
+        <td><input type="password" [(ngModel)]="tempAccount.password" placeholder="Contraseña" /></td>
+        <td><input type="text" [(ngModel)]="tempAccount.url" placeholder="Url referida" /></td>
+        <td><input type="text" [(ngModel)]="tempAccount.info" placeholder="Info" /></td>
+        <td>
+          <img
+            src="assets/images/check.png"
+            alt="Confirm Add Icon"
+            class="check-icon"
+            (click)="confirmAdd()"
+          />
+        </td>
+      </tr>
+
     </tbody>
   </table>
-  
 </div>
