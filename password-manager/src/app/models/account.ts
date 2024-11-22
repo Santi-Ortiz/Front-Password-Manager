@@ -3,6 +3,7 @@ import { User } from "./user";
 
 export interface Account {
     app: App
-    user: User
+    user: User | null
+    usernameFromApp: string
     password: string
 }

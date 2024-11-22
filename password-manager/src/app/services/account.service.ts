@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
 import {User} from "../models/user";
 import {Observable} from "rxjs";
+import {Account} from "../models/account";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,8 @@ export class AccountService {
   }
 
   // Método: Obtener todas las cuentas asociadas a un usuario
-  getAccountsByUserId(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}/accounts`, this.httpOptions);
+  getAccountsByUserId(id: number): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.apiUrl}/user-accounts/${id}`, this.httpOptions);
   }
+
 }
