@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { NgForOf, NgIf} from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import {AccountService} from "../../services/account.service";
 
 @Component({
   selector: 'app-account-list',
@@ -9,25 +10,24 @@ import { FormsModule } from '@angular/forms';
   imports: [
     NgIf,
     NgForOf,
-    FormsModule 
+    FormsModule
   ],
   templateUrl: './account-list.component.html',
   styleUrls: ['./account-list.component.css']
 })
 export class AccountListComponent implements OnInit {
   username: string | null = null;
+  userId: number | null = null;
   isAdding: boolean = false;
   accounts: any[] = [];
   tempAccount: any | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
-    this.accounts = [
-      { site: 'Google', user: '9518', password: '6369', url: 'https://google.com', info: 'Cuenta principal' },
-      { site: 'Twitter', user: '7326', password: '10437', url: 'https://twitter.com', info: 'Cuenta secundaria' }
-    ];
+    this.userId = this.authService.getUserId();
+    this.accounts = this.accountService.getAccountsByUserId(this.userId);
   }
 
   toggleAdd(): void {

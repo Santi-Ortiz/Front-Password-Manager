@@ -29,6 +29,10 @@ export class AuthService {
     return this.username;
   }
 
+  public getUserId(): number | null {
+    return this.userId;
+  }
+
   public register(user: any): Observable<any> {
     return this.http.post(`${this.registerUrl}/add`, user, { observe: 'response' }).pipe(
       tap((response) => {

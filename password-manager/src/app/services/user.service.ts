@@ -32,10 +32,6 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/find/${id}`, this.httpOptions);
   }
 
-  // Método: Obtener todas las cuentas asociadas a un usuario
-  getAccountsByUserId(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}/accounts`, this.httpOptions);
-  }
 
   // Método: Actualizar un usuario
   updateUser(user: User, id: number): Observable<User> {
