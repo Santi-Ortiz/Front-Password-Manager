@@ -1,5 +1,5 @@
 export interface App {
-    id: number
+    appId: number
     name: string
     description: string
     url: string

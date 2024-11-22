@@ -1,7 +1,7 @@
 import { Account } from "./account"
 
 export interface User {
-    id: number
+    userId: number
     username: string
     password: string
     email: string

@@ -52,7 +52,7 @@ export class AccountListComponent implements OnInit {
       this.userService.getUserById(this.userId).subscribe({
         next: (user) => {
           this.userActual = user;
-          this.userActual.id = this.userId!;
+          this.userActual.userId = this.userId!;
         },
         error: (err) => {
           console.error('Error al obtener el usuario:', err);
@@ -63,11 +63,13 @@ export class AccountListComponent implements OnInit {
       this.accountService.getAccountsByUserId(this.userId).subscribe({
         next: (accounts) => {
           this.accounts = accounts;
+          console.log(this.accounts);
         },
         error: (err) => {
           console.error("Error al cargar las cuentas: ", err);
         }
       });
+
     }
   }
 
@@ -76,9 +78,9 @@ export class AccountListComponent implements OnInit {
     this.isAdding = !this.isAdding;
     if (this.isAdding) {
       this.tempAccount = {
-        id: this.tempAccount!.id,
-        app: { id: 1, name: '', description: '', url: '' },
-        user: { id: this.userActual!.id, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
+        accountId: 0,
+        app: { appId: 1, name: '', description: '', url: '' },
+        user: { userId: this.userActual!.userId, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
         usernameFromApp: '',
         password: ''
       };
@@ -116,9 +118,9 @@ export class AccountListComponent implements OnInit {
     this.twofaService.validateToken(this.tokenValue).subscribe({
       next: (isValid) => {
         if (isValid) {
-          this.startCountdown(); // Inicia el conteo regresivo
+          this.startCountdown();
           this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
-          this.isTokenValid = true; // Bloquea los campos
+          this.isTokenValid = true;
         } else {
           this.remainingAttempts--;
           if (this.remainingAttempts > 0) {
@@ -127,7 +129,6 @@ export class AccountListComponent implements OnInit {
             this.validationMessage = 'Su cuenta estará bloqueada durante 5 minutos por seguridad.';
             this.accountLocked = true;
 
-            // Desbloquear la cuenta después de 5 minutos
             setTimeout(() => {
               this.accountLocked = false;
               this.remainingAttempts = 3;
@@ -151,7 +152,7 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.usernameFromApp &&
       this.tempAccount.password
     ) {
-      this.tempAccount.user!.id = this.userId!;
+      this.tempAccount.user!.userId = this.userId!;
 
       this.accountService.addAccount(this.tempAccount).subscribe({
         next: (newAccount) => {
@@ -169,10 +170,11 @@ export class AccountListComponent implements OnInit {
   }
 
   deleteAccount(account: Account): void {
-    const accountId = account.id;
+    const accountId = account.accountId;
     this.accountService.deleteAccount(accountId).subscribe({
       next: () => {
-        this.accounts = this.accounts.filter(a => a.id !== accountId);
+        this.accounts = this.accounts.filter(a => a.accountId !== accountId);
+        console.log("Cuenta eliminada con éxito.");
       },
       error: (err) => {
         console.error("Error al eliminar la cuenta: ", err);
@@ -187,15 +189,15 @@ export class AccountListComponent implements OnInit {
   }
 
   private startCountdown(): void {
-    this.timeRemaining = 300; // 5 minutos en segundos
+    this.timeRemaining = 300;
     this.countdownInterval = setInterval(() => {
       this.timeRemaining--;
       this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
 
       if (this.timeRemaining <= 0) {
-        clearInterval(this.countdownInterval); // Detiene el intervalo
-        this.isTokenValid = false; // Desbloquea los campos
-        this.validationMessage = ''; // Limpia el mensaje
+        clearInterval(this.countdownInterval);
+        this.isTokenValid = false; 
+        this.validationMessage = ''; 
       }
     }, 1000);
   }
