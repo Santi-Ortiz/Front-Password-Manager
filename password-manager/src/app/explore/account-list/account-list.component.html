@@ -1,6 +1,12 @@
 <div class="table-container">
-  <img src="assets/images/plus.png" alt="Add Icon" class="plus-icon" (click)="addTempRow()">
+  <!-- Botón de agregar/cerrar -->
+  <img
+    [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
+    alt="Add/Close Icon"
+    class="plus-icon"
+    (click)="toggleAdd()">
 
+  <!-- Título y bienvenida -->
   <h1>
     <span class="yellow">
       CryptSafe
@@ -8,50 +14,36 @@
   </h1>
   <h1>
     <span class="red">
-      Bienvenido de vuelta, *nombre de usuario*
+      Bienvenido de vuelta, {{ username || 'Usuario' }}
     </span>
   </h1>
 
+  <!-- Tabla de datos -->
   <table class="container">
     <thead>
-      <tr>
-        <th><h1>Sitio</h1></th>
-        <th><h1>Usuario</h1></th>
-        <th><h1>Contraseña</h1></th>
-        <th><h1>Url referida</h1></th>
-        <th><h1>Info</h1></th>
-        <th><h1>Acciones</h1></th>
-      </tr>
+    <tr>
+      <th><h1>Sitio</h1></th>
+      <th><h1>Usuario</h1></th>
+      <th><h1>Contraseña</h1></th>
+      <th><h1>Url referida</h1></th>
+      <th><h1>Info</h1></th>
+      <th><h1>Acciones</h1></th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let account of accounts">
-        <td>{{ account.sitio }}</td>
-        <td>{{ account.usuario }}</td>
-        <td>{{ account.contrasena }}</td>
-        <td>{{ account.url }}</td>
-        <td>{{ account.info }}</td>
-        <td>
-          <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" />
-          <img src="assets/images/edit.png" alt="Edit Icon" class="delete-icon" />
-          <img src="assets/images/check.png" alt="Check Icon" class="delete-icon"  />
-        </td>
-      </tr>
-  
-      <tr *ngFor="let temp of tempAccounts">
-        <td><input type="text" [(ngModel)]="temp.sitio" /></td>
-        <td><input type="text" [(ngModel)]="temp.usuario" /></td>
-        <td><input type="text" [(ngModel)]="temp.contrasena" /></td>
-        <td><input type="text" [(ngModel)]="temp.url" /></td>
-        <td><input type="text" [(ngModel)]="temp.info" /></td>
-        <td>
-          <img
-            src="assets/images/check.png"
-            alt="Check Icon"
-            class="check-icon"
-            (click)="saveRows()"
-          />
-        </td>
-      </tr>
+    <!-- Itera sobre las cuentas y aplica clase temporal a la primera fila cuando sea temporal -->
+    <tr *ngFor="let account of accounts; let i = index" [class.temporary-row]="isAdding && i === 0">
+      <td>{{ account.site || '' }}</td>
+      <td>{{ account.user || '' }}</td>
+      <td>{{ account.password || '' }}</td>
+      <td>{{ account.url || '' }}</td>
+      <td>{{ account.info || '' }}</td>
+      <td>
+        <!-- Oculta las acciones para la fila temporal -->
+        <img *ngIf="!isAdding || i !== 0" src="assets/images/delete.png" alt="Delete Icon" class="delete-icon">
+        <img *ngIf="!isAdding || i !== 0" src="assets/images/edit.png" alt="Edit Icon" class="delete-icon">
+      </td>
+    </tr>
     </tbody>
   </table>
   

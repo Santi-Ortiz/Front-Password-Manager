@@ -116,6 +116,7 @@ h2 a {
   }
 }
 
+/* Icono "plus" y "close" se posicionan igual */
 .plus-icon {
   position: absolute;
   top: 6.5vw;
@@ -179,6 +180,7 @@ h2 a {
 .action-buttons {
   text-align: center;
   margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .action-buttons button {
@@ -194,6 +196,7 @@ h2 a {
 
 .btn-edit {
   background-color: #4DC3FA;
+  background-color: #4DC3FA;
 }
 
 .btn-delete {
@@ -202,5 +205,26 @@ h2 a {
 
 .action-buttons button:hover {
   opacity: 0.8;
+  opacity: 0.8;
 }
 
+
+
+/* Estilo para la fila temporal */
+.temporary-row {
+  background-color: rgba(255, 165, 0, 0.6); /* Naranja opaco */
+  color: #4D4D4D; /* Gris oscuro para el texto */
+  font-style: italic; /* Opcional, resalta que es temporal */
+  text-align: left;
+}
+
+/* Aseguramos que no haya sombra */
+.temporary-row td {
+  box-shadow: none;
+}
+
+/* Cambios al pasar el cursor */
+.temporary-row:hover {
+  background-color: rgba(255, 140, 0, 0.8); /* Naranja más fuerte */
+  box-shadow: none;
+}
