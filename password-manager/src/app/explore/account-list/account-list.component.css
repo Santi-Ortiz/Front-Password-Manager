@@ -70,17 +70,17 @@ h2 a {
 .container tr:nth-child(odd) {
   background-color: #323C50;
   height: 60px;
-  max-height: 60px; /* Evita que se agrande dinámicamente */
-  min-height: 60px; /* Evita que se reduzca */
-  overflow: hidden; /* Oculta cualquier contenido que desborde la fila */
+  max-height: 60px;
+  min-height: 60px;
+  overflow: hidden; 
 }
 
 .container tr:nth-child(even) {
   background-color: #2C3446;
   height: 60px;
-  max-height: 60px; /* Evita que se agrande dinámicamente */
-  min-height: 60px; /* Evita que se reduzca */
-  overflow: hidden; /* Oculta cualquier contenido que desborde la fila */
+  max-height: 60px;
+  min-height: 60px;
+  overflow: hidden; 
 }
 
 .container th {
@@ -239,5 +239,9 @@ h2 a {
 .temporary-row input[type="password"] {
   height: 60%; 
   width: 80%;
+  color: #ccc;
+  font-size: bold;  
+  font-family: 'poppins', sans-serif;
   box-sizing: border-box;
+
 }

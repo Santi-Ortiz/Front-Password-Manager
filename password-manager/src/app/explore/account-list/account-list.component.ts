@@ -20,7 +20,7 @@ export class AccountListComponent implements OnInit {
   username: string | null = null;
   userId: number | null = null;
   isAdding: boolean = false;
-  accounts: Account[] = []; // Cambia el tipo a Account[]
+  accounts: Account[] = [];
   tempAccount: Account | null = null;
 
   constructor(private authService: AuthService, private accountService: AccountService) {}
@@ -29,7 +29,6 @@ export class AccountListComponent implements OnInit {
     this.username = this.authService.getUsername();
     this.userId = this.authService.getUserId();
 
-    // Llama al servicio para obtener las cuentas
     if (this.userId !== null) {
       this.accountService.getAccountsByUserId(this.userId).subscribe({
         next: (accounts) => {
@@ -47,7 +46,7 @@ export class AccountListComponent implements OnInit {
     if (this.isAdding) {
       this.tempAccount = {
         app: { name: '', description: '', url: '' },
-        user: { id: 0, username: '', password: '', email: '', role: '' }, // Objeto `User` válido
+        user: { id: 0, username: '', password: '', email: '', role: '' },
         usernameFromApp: '',
         password: ''
       };
@@ -56,12 +55,19 @@ export class AccountListComponent implements OnInit {
     }
   }
 
-
   confirmAdd(): void {
-    if (this.tempAccount) {
+    if (
+      this.tempAccount?.app.name &&
+      this.tempAccount.app.description &&
+      this.tempAccount.app.url &&
+      this.tempAccount.usernameFromApp &&
+      this.tempAccount.password
+    ) {
       this.accounts.unshift(this.tempAccount);
-      this.tempAccount = null;
+      this.tempAccount = null; 
       this.isAdding = false;
+    } else {
+      alert("Por favor, completa todos los campos antes de agregar una cuenta.");
     }
   }
 }
