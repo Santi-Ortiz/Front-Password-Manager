@@ -20,8 +20,8 @@ export class AccountListComponent implements OnInit {
   username: string | null = null;
   userId: number | null = null;
   isAdding: boolean = false;
-  isTokenRequested: boolean = false; // Estado para el botón "Pedir Token"
-  tokenValue: string = ''; // Valor ingresado del token
+  isTokenRequested: boolean = false; 
+  tokenValue: string = '';
   accounts: Account[] = [];
   tempAccount: Account | null = null;
 
@@ -58,7 +58,15 @@ export class AccountListComponent implements OnInit {
   }
 
   requestToken(): void {
-    this.isTokenRequested = true; // Cambia el estado para mostrar el campo de token
+    this.isTokenRequested = true; 
+  }
+
+  validateToken(): void {
+    if (this.tokenValue === 'expectedTokenValue') {
+      alert('Token válido');
+    } else {
+      alert('Token inválido');
+    }
   }
 
   confirmAdd(): void {
