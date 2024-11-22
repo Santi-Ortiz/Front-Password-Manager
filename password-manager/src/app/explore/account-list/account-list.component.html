@@ -51,18 +51,33 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let account of accounts; let i = index">
-      <td>{{ account.app.name }}</td>
-      <td>{{ account.usernameFromApp }}</td>
-      <td>{{ account.password }}</td>
-      <td>{{ account.app.url }}</td>
-      <td>{{ account.app.description }}</td>
-      <td>
-        <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" (click)="deleteAccount(account)" />
-        <img src="assets/images/edit.png" alt="Edit Icon" class="check-icon" />
-        <img src="assets/images/check.png" alt="Edit Icon" class="edit-icon" (click)="editAccount(account)"/>
-      </td>
-    </tr>
+      <tr *ngFor="let account of accounts; let i = index">
+        <td>
+          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.name" />
+          <span *ngIf="editingIndex !== i">{{ account.app.name }}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.usernameFromApp" />
+          <span *ngIf="editingIndex !== i">{{ account.usernameFromApp }}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" type="password" [(ngModel)]="account.password" />
+          <span *ngIf="editingIndex !== i">{{ account.password }}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.url" />
+          <span *ngIf="editingIndex !== i">{{ account.app.url }}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" type="text" [(ngModel)]="account.app.description" />
+          <span *ngIf="editingIndex !== i">{{ account.app.description }}</span>
+        </td>
+        <td>
+          <img *ngIf="editingIndex !== i" src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" (click)="deleteAccount(account)" />
+          <img *ngIf="editingIndex !== i" src="assets/images/edit.png" alt="Edit Icon" class="edit-icon" (click)="editAccount(i)" />
+          <img *ngIf="editingIndex === i" src="assets/images/check.png" alt="Save Icon" class="check-icon" (click)="saveAccount(account)" />
+        </td>
+      </tr>
 
     <tr *ngIf="tempAccount" class="temporary-row">
       <td><input type="text" [(ngModel)]="tempAccount.app.name" placeholder="Sitio" /></td>

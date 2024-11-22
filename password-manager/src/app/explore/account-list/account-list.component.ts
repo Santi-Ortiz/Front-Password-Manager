@@ -36,6 +36,7 @@ export class AccountListComponent implements OnInit {
   isTokenValid: boolean = false;
   timeRemaining: number = 300;
   app: App | null = null;
+  editingIndex: number | null = null;
 
   private countdownInterval: any;
 
@@ -203,10 +204,20 @@ export class AccountListComponent implements OnInit {
     });
   }
 
-  editAccount(account: Account): void {
-    this.tempAccount = { ...account };
-    this.isAdding = true;
-    this.deleteAccount(account);
+  editAccount(index: number): void {
+    this.editingIndex = index;
+  }
+
+  saveAccount(account: Account): void {
+    this.accountService.updateAccount(account, account.accountId).subscribe({
+      next: (updatedAccount) => {
+        this.accounts[this.editingIndex!] = updatedAccount;
+        this.editingIndex = null;
+      },
+      error: (err) => {
+        console.error("Error al actualizar la cuenta: ", err);
+      }
+    });
   }
 
   private startCountdown(): void {

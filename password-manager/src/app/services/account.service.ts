@@ -40,8 +40,8 @@ export class AccountService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${accountId}`);
   }
 
-  updateAccount(account: Account): Observable<Account> {
-    return this.http.put<Account>(`${this.apiUrl}/update`, account);
+  updateAccount(account: Account, accountId: number): Observable<Account> {
+    return this.http.put<Account>(`${this.apiUrl}/update/${accountId}`, account);
   }
 
 }
