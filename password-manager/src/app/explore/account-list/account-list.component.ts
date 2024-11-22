@@ -47,7 +47,8 @@ export class AccountListComponent implements OnInit {
       // Suscribirse al observable para obtener el usuario actual
       this.userService.getUserById(this.userId).subscribe({
         next: (user) => {
-          this.userActual = user; // Asigna el usuario obtenido
+          this.userActual = user;
+          this.userActual.id = this.userId!;
         },
         error: (err) => {
           console.error('Error al obtener el usuario:', err);
@@ -71,11 +72,12 @@ export class AccountListComponent implements OnInit {
     this.isAdding = !this.isAdding;
     if (this.isAdding) {
       this.tempAccount = {
-        app: { name: '', description: '', url: '' },
-        user: { id: 0, username: '', password: '', email: '', role: '' },
+        app: { id: 1, name: '', description: '', url: '' },
+        user: { id: this.userActual!.id, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
         usernameFromApp: '',
         password: ''
       };
+      console.log(this.tempAccount);
     } else {
       this.tempAccount = null;
     }
@@ -119,12 +121,11 @@ export class AccountListComponent implements OnInit {
             this.validationMessage = 'Su cuenta estará bloqueada durante 5 minutos por seguridad.';
             this.accountLocked = true;
 
-            // Desbloquear la cuenta después de 5 minutos
             setTimeout(() => {
               this.accountLocked = false;
-              this.remainingAttempts = 3; // Reiniciar intentos
-              this.validationMessage = ''; // Limpiar mensaje
-            }, 5 * 60 * 1000); // 5 minutos
+              this.remainingAttempts = 3; 
+              this.validationMessage = ''; 
+            }, 5 * 60 * 1000);
           }
         }
       },
@@ -143,9 +144,18 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.usernameFromApp &&
       this.tempAccount.password
     ) {
-      this.accounts.unshift(this.tempAccount);
-      this.tempAccount = null;
-      this.isAdding = false;
+      this.tempAccount.user!.id = this.userId!;
+
+      this.accountService.addAccount(this.tempAccount).subscribe({
+        next: (newAccount) => {
+          this.accounts.unshift(newAccount);
+          this.tempAccount = null; 
+          this.isAdding = false;
+        },
+        error: (err) => {
+          console.error("Error al agregar la cuenta: ", err);
+        }
+      });
     } else {
       alert("Por favor, completa todos los campos antes de agregar una cuenta.");
     }
