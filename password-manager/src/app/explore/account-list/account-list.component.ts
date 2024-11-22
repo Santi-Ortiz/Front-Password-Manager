@@ -85,7 +85,8 @@ export class AccountListComponent implements OnInit {
   requestToken(): void {
     if (this.userId) {
       this.twofaService.createToken(this.userActual).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Respuesta del backend:', response); // Registra la respuesta completa
           this.isTokenRequested = true;
           this.validationMessage = ''; // Limpiar mensaje previo
           this.remainingAttempts = 3; // Reiniciar intentos
@@ -99,6 +100,7 @@ export class AccountListComponent implements OnInit {
       });
     }
   }
+
 
   // Valida el token ingresado
   validateToken(): void {
