@@ -19,8 +19,21 @@
       </div>
       <ng-template #tokenForm>
         <label for="token-input" class="token-label">Token:</label>
-        <input id="token-input" type="text" [(ngModel)]="tokenValue" class="token-input" placeholder="Ingresa el token" />
-        <button class="btn-validate" (click)="validateToken()">Validar</button>
+        <input
+          id="token-input"
+          type="text"
+          [(ngModel)]="tokenValue"
+          class="token-input"
+          placeholder="Ingresa el token"
+          [disabled]="isTokenValid"
+        />
+        <button
+          class="btn-validate"
+          (click)="validateToken()"
+          [disabled]="isTokenValid"
+        >
+        Validar
+        </button>
         <p class="validation-message" *ngIf="validationMessage">{{ validationMessage }}</p>
       </ng-template>
     </div>

@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { AccountService } from "../../services/account.service";
 import { TwofaService } from "../../services/twofa.service";
 import { Account } from "../../models/account";
-import {User} from "../../models/user";
-import {UserService} from "../../services/user.service";
+import { User } from "../../models/user";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-account-list',
@@ -31,6 +31,10 @@ export class AccountListComponent implements OnInit {
   remainingAttempts: number = 3; // Número de intentos restantes
   accountLocked: boolean = false; // Indica si la cuenta está bloqueada
   userActual: User | null = null;
+  isTokenValid: boolean = false; // Bloquea campo y botón si el token es válido
+  timeRemaining: number = 300; // Tiempo restante en segundos (5 minutos)
+
+  private countdownInterval: any;
 
   constructor(
     private authService: AuthService,
@@ -52,7 +56,7 @@ export class AccountListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al obtener el usuario:', err);
-          this.userActual = null; // Manejo en caso de error
+          this.userActual = null;
         }
       });
 
@@ -87,12 +91,11 @@ export class AccountListComponent implements OnInit {
   requestToken(): void {
     if (this.userId) {
       this.twofaService.createToken(this.userActual).subscribe({
-        next: (response) => {
-          console.log('Respuesta del backend:', response); // Registra la respuesta completa
+        next: () => {
           this.isTokenRequested = true;
-          this.validationMessage = ''; // Limpiar mensaje previo
-          this.remainingAttempts = 3; // Reiniciar intentos
-          this.accountLocked = false; // Desbloquear cuenta si estaba bloqueada
+          this.validationMessage = '';
+          this.remainingAttempts = 3;
+          this.accountLocked = false;
           alert('Token generado y enviado a tu correo.');
         },
         error: (err) => {
@@ -103,8 +106,6 @@ export class AccountListComponent implements OnInit {
     }
   }
 
-
-  // Valida el token ingresado
   validateToken(): void {
     if (this.accountLocked) {
       this.validationMessage = 'Su cuenta está bloqueada por 5 minutos.';
@@ -114,7 +115,9 @@ export class AccountListComponent implements OnInit {
     this.twofaService.validateToken(this.tokenValue).subscribe({
       next: (isValid) => {
         if (isValid) {
-          this.validationMessage = 'Token válido por 5 minutos.';
+          this.startCountdown(); // Inicia el conteo regresivo
+          this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
+          this.isTokenValid = true; // Bloquea los campos
         } else {
           this.remainingAttempts--;
           if (this.remainingAttempts > 0) {
@@ -123,10 +126,11 @@ export class AccountListComponent implements OnInit {
             this.validationMessage = 'Su cuenta estará bloqueada durante 5 minutos por seguridad.';
             this.accountLocked = true;
 
+            // Desbloquear la cuenta después de 5 minutos
             setTimeout(() => {
               this.accountLocked = false;
-              this.remainingAttempts = 3; 
-              this.validationMessage = ''; 
+              this.remainingAttempts = 3;
+              this.validationMessage = '';
             }, 5 * 60 * 1000);
           }
         }
@@ -151,7 +155,7 @@ export class AccountListComponent implements OnInit {
       this.accountService.addAccount(this.tempAccount).subscribe({
         next: (newAccount) => {
           this.accounts.unshift(newAccount);
-          this.tempAccount = null; 
+          this.tempAccount = null;
           this.isAdding = false;
         },
         error: (err) => {
@@ -161,5 +165,25 @@ export class AccountListComponent implements OnInit {
     } else {
       alert("Por favor, completa todos los campos antes de agregar una cuenta.");
     }
+  }
+
+  private startCountdown(): void {
+    this.timeRemaining = 300; // 5 minutos en segundos
+    this.countdownInterval = setInterval(() => {
+      this.timeRemaining--;
+      this.validationMessage = `El token es válido por ${this.formatTime(this.timeRemaining)}.`;
+
+      if (this.timeRemaining <= 0) {
+        clearInterval(this.countdownInterval); // Detiene el intervalo
+        this.isTokenValid = false; // Desbloquea los campos
+        this.validationMessage = ''; // Limpia el mensaje
+      }
+    }, 1000);
+  }
+
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
   }
 }
