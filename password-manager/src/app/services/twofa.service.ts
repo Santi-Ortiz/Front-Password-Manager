@@ -28,13 +28,15 @@ export class TwofaService {
   }
 
   // 1. Método para solicitar un nuevo token
-  createToken(user: User | null): Observable<string> {
-    console.log("En crear token servicio el usuario es:")
+  createToken(user: User | null): Observable<any> {
+    console.log("En crear token servicio el usuario es:");
     console.log(user?.username);
-    console.log("En crear token servicio el correo es:")
+    console.log("En crear token servicio el correo es:");
     console.log(user?.email);
-    return this.http.post<string>(`${this.apiUrl}/create`, user, this.httpOptions);
+
+    return this.http.post(`${this.apiUrl}/create`, user, this.httpOptions);
   }
+
 
   // 2. Método para validar un token
   validateToken(token: string): Observable<boolean> {
