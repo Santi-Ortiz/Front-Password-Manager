@@ -20,10 +20,11 @@ export class AccountListComponent implements OnInit {
   username: string | null = null;
   userId: number | null = null;
   isAdding: boolean = false;
-  isTokenRequested: boolean = false; 
+  isTokenRequested: boolean = false;
   tokenValue: string = '';
   accounts: Account[] = [];
   tempAccount: Account | null = null;
+  twofa: boolean = false;
 
   constructor(private authService: AuthService, private accountService: AccountService) {}
 
@@ -58,7 +59,7 @@ export class AccountListComponent implements OnInit {
   }
 
   requestToken(): void {
-    this.isTokenRequested = true; 
+    this.isTokenRequested = true;
   }
 
   validateToken(): void {
@@ -78,7 +79,7 @@ export class AccountListComponent implements OnInit {
       this.tempAccount.password
     ) {
       this.accounts.unshift(this.tempAccount);
-      this.tempAccount = null; 
+      this.tempAccount = null;
       this.isAdding = false;
     } else {
       alert("Por favor, completa todos los campos antes de agregar una cuenta.");
