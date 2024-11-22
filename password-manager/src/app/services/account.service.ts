@@ -15,7 +15,7 @@ export class AccountService {
   private httpOptions: { headers: HttpHeaders } = { headers: new HttpHeaders() };
 
   constructor(private http: HttpClient, private authService: AuthService) {
-    this.setAuthHeaders(); // Establecemos encabezados al inicializar el servicio
+    this.setAuthHeaders();
   }
 
   private setAuthHeaders(): void {
@@ -23,14 +23,17 @@ export class AccountService {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // Nota: template literal corregido
+        Authorization: `Bearer ${token}`,
       }),
     };
   }
 
-  // Método: Obtener todas las cuentas asociadas a un usuario
   getAccountsByUserId(id: number): Observable<Account[]> {
     return this.http.get<Account[]>(`${this.apiUrl}/user-accounts/${id}`, this.httpOptions);
+  }
+
+  addAccount(account: Account): Observable<Account> {
+    return this.http.post<Account>(`${this.apiUrl}/add`, account);
   }
 
 }
