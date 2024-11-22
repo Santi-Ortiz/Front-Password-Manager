@@ -72,6 +72,7 @@ export class AccountListComponent implements OnInit {
     this.isAdding = !this.isAdding;
     if (this.isAdding) {
       this.tempAccount = {
+        id: this.tempAccount!.id,
         app: { id: 1, name: '', description: '', url: '' },
         user: { id: this.userActual!.id, username: this.userActual!.username, password: this.userActual!.password, email: this.userActual!.email, role: this.userActual!.role },
         usernameFromApp: '',
@@ -161,5 +162,23 @@ export class AccountListComponent implements OnInit {
     } else {
       alert("Por favor, completa todos los campos antes de agregar una cuenta.");
     }
+  }
+
+  deleteAccount(account: Account): void {
+    const accountId = account.id;
+    this.accountService.deleteAccount(accountId).subscribe({
+      next: () => {
+        this.accounts = this.accounts.filter(a => a.id !== accountId);
+      },
+      error: (err) => {
+        console.error("Error al eliminar la cuenta: ", err);
+      }
+    });
+  }
+
+  editAccount(account: Account): void {
+    this.tempAccount = { ...account };
+    this.isAdding = true;
+    this.deleteAccount(account);
   }
 }

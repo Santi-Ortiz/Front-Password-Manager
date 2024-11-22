@@ -45,9 +45,9 @@
       <td>{{ account.app.url }}</td>
       <td>{{ account.app.description }}</td>
       <td>
-        <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" />
+        <img src="assets/images/delete.png" alt="Delete Icon" class="delete-icon" (click)="deleteAccount(account)" />
         <img src="assets/images/edit.png" alt="Edit Icon" class="check-icon" />
-        <img src="assets/images/check.png" alt="Edit Icon" class="edit-icon" />
+        <img src="assets/images/check.png" alt="Edit Icon" class="edit-icon" (click)="editAccount(account)"/>
       </td>
     </tr>
 
