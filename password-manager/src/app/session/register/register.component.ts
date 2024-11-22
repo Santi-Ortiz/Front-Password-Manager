@@ -3,7 +3,9 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import { AuthService } from '../../services/auth.service';
 import { Role } from '../../models/role';
 import { HttpClientModule } from '@angular/common/http';
-import {NgIf} from "@angular/common"; // Importa HttpClientModule
+import {NgIf} from "@angular/common";
+import { Router, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -12,7 +14,7 @@ import {NgIf} from "@angular/common"; // Importa HttpClientModule
     HttpClientModule,
     ReactiveFormsModule,
     NgIf,
-    // Asegúrate de incluirlo aquí
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
@@ -22,7 +24,7 @@ export class RegisterComponent {
   isLoading = false;
   message: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       telephone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
@@ -51,8 +53,7 @@ export class RegisterComponent {
     const { username, telephone, email, password } = this.registerForm.value;
 
     const roleType = Role.User;
-    //const roleId = roleType === Role.User ? 1 : 2;
-    const roleId = 2;
+    const roleId = roleType === Role.User ? 1 : 2;
 
     const newUser = {
       username,

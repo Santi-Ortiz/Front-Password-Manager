@@ -13,7 +13,7 @@ import {NgIf} from "@angular/common";
     NgIf
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'] // Fix en el nombre de styleUrl -> styleUrls
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   username: string = '';
@@ -23,16 +23,16 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
-    this.error = null; // Limpiar errores previos
+    this.error = null;
     console.log('Iniciando sesión con:', this.username, this.password);
     this.authService.login(this.username, this.password).subscribe({
       next: () => {
         console.log('Inicio de sesión exitoso');
-        this.router.navigate(['/account-list']); // Navegar a la ruta deseada
+        this.router.navigate(['/account-list']);
       },
       error: (err) => {
         console.error('Error en inicio de sesión:', err);
-        this.error = 'Credenciales incorrectas. Por favor, intente nuevamente.';
+        this.error = 'Credenciales incorrectas.\n\n Por favor, intenta nuevamente.';
       }
     });
   }

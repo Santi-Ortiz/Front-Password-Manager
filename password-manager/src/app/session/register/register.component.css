@@ -193,3 +193,19 @@ section .signin .content .form .inputBox input[type="submit"] {
   border: none; 
   border-radius: 5px;
 }
+
+.signin .content .form .links {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.signin .content .form .links a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+}
+.signin .content .form .links a:nth-child(2) {
+  color: #0f0;
+  font-weight: 600;
+}

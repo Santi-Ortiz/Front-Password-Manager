@@ -274,8 +274,8 @@
             <input type="password" [(ngModel)]="password" name="password" required>
             <i>Password</i>
           </div>
-          <div *ngIf="error" class="error">{{ error }}</div> <!-- Mostrar errores -->
-          <div class="links">
+          <div *ngIf="error" class="error-message">{{ error }}</div>
+          <div class="links"> 
             <a [routerLink]="'/register'">Sign up</a>
           </div>
           <div class="inputBox">

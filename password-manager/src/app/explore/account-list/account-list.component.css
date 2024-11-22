@@ -279,9 +279,10 @@ h2 a {
 }
 
 .btn-token, .btn-validate {
-  background-color: #8a45bb;
+  background-color: #F2F2F2;
   font-family: 'poppins', sans-serif;
-  color: white;
+  font-size: bold;
+  color: black;
   padding: 10px 20px;
   font-size: 1em;
   margin: 15px;
@@ -292,7 +293,8 @@ h2 a {
 }
 
 .btn-token:hover, .btn-validate:hover {
-  background-color: #5b009e; 
+  background-color: #F2F2F2;
+  opacity: 0.9; 
 }
 
 .password-container {

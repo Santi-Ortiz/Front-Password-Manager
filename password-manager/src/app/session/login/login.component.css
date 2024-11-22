@@ -1,9 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Quicksand", sans-serif;
+  font-family: 'poppins', sans-serif;
 }
 body {
   display: flex;
@@ -49,7 +50,7 @@ section span {
   transition: 1.5s;
 }
 section span:hover {
-  background: #0f0;
+  background: #174031;
   transition: 0s;
 }
 
@@ -59,6 +60,7 @@ section .signin {
   z-index: 1000;
   display: flex;
   justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
   align-items: center;
   padding: 40px;
   border-radius: 4px;
@@ -130,16 +132,7 @@ section .signin .content .form .inputBox i {
   color: #0f0;
   font-weight: 600;
 }
-.signin .content .form .inputBox input[type="submit"] {
-  padding: 10px;
-  background: #0f0;
-  cursor: pointer;
-  color: #000;
-  font-weight: 600;
-  font-size: 1.35em;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-}
+
 input[type="submit"]:active {
   opacity: 0.6;
 }
@@ -157,8 +150,22 @@ input[type="submit"]:active {
 }
 
 .error-message {
-  color: #ff4d4d; /* Rojo suave */
-  font-weight: 500; /* Negrilla ligera */
+  color: #ff4d4d;
+  font-weight: 500; 
   font-size: 0.9em;
   margin-top: 5px;
+}
+
+section .signin .content .form .inputBox input[type="submit"] {
+  padding: 15px; 
+  background: #2C7359;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: 0.05em;
+  text-align: center;
+  line-height: 1.5em;
+  border: none; 
+  border-radius: 5px;
 }
