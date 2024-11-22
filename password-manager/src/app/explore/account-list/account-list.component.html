@@ -1,5 +1,4 @@
 <div class="table-container">
-  
   <h1>
     <span class="yellow">CryptSafe</span>
   </h1>
@@ -22,9 +21,11 @@
         <label for="token-input" class="token-label">Token:</label>
         <input id="token-input" type="text" [(ngModel)]="tokenValue" class="token-input" placeholder="Ingresa el token" />
         <button class="btn-validate" (click)="validateToken()">Validar</button>
+        <p class="validation-message" *ngIf="validationMessage">{{ validationMessage }}</p>
       </ng-template>
     </div>
   </div>
+
   <table class="container">
     <thead>
     <tr>
@@ -37,7 +38,6 @@
     </tr>
     </thead>
     <tbody>
-
     <tr *ngFor="let account of accounts; let i = index">
       <td>{{ account.app.name }}</td>
       <td>{{ account.usernameFromApp }}</td>
@@ -51,7 +51,6 @@
       </td>
     </tr>
 
-    
     <tr *ngIf="tempAccount" class="temporary-row">
       <td><input type="text" [(ngModel)]="tempAccount.app.name" placeholder="Sitio" /></td>
       <td><input type="text" [(ngModel)]="tempAccount.usernameFromApp" placeholder="Usuario" /></td>

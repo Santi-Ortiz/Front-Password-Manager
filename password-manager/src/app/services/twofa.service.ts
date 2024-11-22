@@ -3,12 +3,13 @@ import { environment } from "../environments/environment.development";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
+import {User} from "../models/user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TwofaService {
-  private apiUrl = environment.SERVER_URL + '/api/twofa';
+  private apiUrl = environment.SERVER_URL + '/twofa';
 
   private httpOptions: { headers: HttpHeaders } = { headers: new HttpHeaders() };
 
@@ -27,7 +28,11 @@ export class TwofaService {
   }
 
   // 1. Método para solicitar un nuevo token
-  createToken(user: any): Observable<string> {
+  createToken(user: User | null): Observable<string> {
+    console.log("En crear token servicio el usuario es:")
+    console.log(user?.username);
+    console.log("En crear token servicio el correo es:")
+    console.log(user?.email);
     return this.http.post<string>(`${this.apiUrl}/create`, user, this.httpOptions);
   }
 
