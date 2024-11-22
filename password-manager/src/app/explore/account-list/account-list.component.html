@@ -7,15 +7,24 @@
   </h1>
 
   <div class="table-header">
-    <img
-      [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
-      alt="Add/Close Icon"
-      class="plus-icon"
-      (click)="toggleAdd()"
-    />
+    <!-- Botón Plus -->
+    <button
+      class="plus-button"
+      [disabled]="!isTokenValid"
+      (click)="isTokenValid ? toggleAdd() : showTokenPopup()"
+    >
+      <img
+        [src]="isAdding ? 'assets/images/close.png' : 'assets/images/plus.png'"
+        alt="Add/Close Icon"
+        class="plus-icon"
+      />
+    </button>
+
     <div class="token-section">
       <div *ngIf="!isTokenRequested; else tokenForm">
-        <button class="btn-token" (click)="requestToken()">Pedir Token</button>
+        <button class="btn-token" (click)="requestToken()" [disabled]="accountLocked">
+          Pedir Token
+        </button>
       </div>
       <ng-template #tokenForm>
         <label for="token-input" class="token-label">Token:</label>
@@ -25,20 +34,25 @@
           [(ngModel)]="tokenValue"
           class="token-input"
           placeholder="Ingresa el token"
-          [disabled]="isTokenValid"
+          [disabled]="isTokenValid || accountLocked"
         />
         <button
           class="btn-validate"
           (click)="validateToken()"
-          [disabled]="isTokenValid"
+          [disabled]="isTokenValid || accountLocked"
         >
           Validar
         </button>
-        <p class="validation-message" *ngIf="validationMessage">
+        <p
+          class="validation-message"
+          [ngClass]="{ 'error-message': accountLocked }"
+          *ngIf="validationMessage"
+        >
           {{ validationMessage }}
         </p>
       </ng-template>
     </div>
+
     <div class="logout-section">
       <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
     </div>
@@ -108,26 +122,21 @@
         <span *ngIf="editingIndex !== i">{{ account.app.description }}</span>
       </td>
       <td>
+        <!-- Botón Eliminar -->
         <img
-          *ngIf="editingIndex !== i"
           src="assets/images/delete.png"
           alt="Delete Icon"
           class="delete-icon"
-          (click)="deleteAccount(account)"
+          (click)="isTokenValid ? deleteAccount(account) : showTokenPopup()"
+          [class.disabled]="!isTokenValid"
         />
+        <!-- Botón Editar -->
         <img
-          *ngIf="editingIndex !== i"
           src="assets/images/edit.png"
           alt="Edit Icon"
           class="edit-icon"
-          (click)="editAccount(i)"
-        />
-        <img
-          *ngIf="editingIndex === i"
-          src="assets/images/check.png"
-          alt="Save Icon"
-          class="check-icon"
-          (click)="saveAccount(account)"
+          (click)="isTokenValid ? editAccount(i) : showTokenPopup()"
+          [class.disabled]="!isTokenValid"
         />
       </td>
     </tr>

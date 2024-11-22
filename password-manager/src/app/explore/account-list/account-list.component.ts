@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { NgForOf, NgIf } from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { TwofaService } from '../../services/twofa.service';
@@ -14,11 +14,11 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-account-list',
   standalone: true,
-  imports: [NgIf, NgForOf, FormsModule],
+  imports: [NgIf, NgForOf, FormsModule, NgClass],
   templateUrl: './account-list.component.html',
   styleUrls: ['./account-list.component.css'],
 })
-export class AccountListComponent implements OnInit {
+export class AccountListComponent implements OnInit, OnDestroy {
   username: string | null = null;
   userId: number | null = null;
   isAdding: boolean = false;
@@ -35,6 +35,9 @@ export class AccountListComponent implements OnInit {
   editingIndex: number | null = null;
   showPassword: boolean[] = [];
   message: string = '';
+
+  lockTimeout: any;
+  lockTimeRemaining: number = 300;
 
   app: App = {
     appId: 0,
@@ -78,6 +81,10 @@ export class AccountListComponent implements OnInit {
   }
 
   toggleAdd(): void {
+    if (!this.isTokenValid) {
+      this.showTokenPopup();
+      return;
+    }
     this.isAdding = !this.isAdding;
     this.tempAccount = this.isAdding
       ? {
@@ -153,13 +160,23 @@ export class AccountListComponent implements OnInit {
 
 
   deleteAccount(account: Account): void {
+    if (!this.isTokenValid) {
+      this.showTokenPopup();
+      return;
+    }
     this.accountService.deleteAccount(account.accountId).subscribe({
-      next: () => (this.accounts = this.accounts.filter((a) => a !== account)),
+      next: () => {
+        this.accounts = this.accounts.filter((a) => a !== account);
+      },
       error: (err) => console.error(err),
     });
   }
 
   editAccount(index: number): void {
+    if (!this.isTokenValid) {
+      this.showTokenPopup();
+      return;
+    }
     this.editingIndex = index;
   }
 
@@ -172,22 +189,63 @@ export class AccountListComponent implements OnInit {
 
   private startCountdown(): void {
     this.timeRemaining = 300;
+    this.updateValidationMessage();
+
     this.countdownInterval = setInterval(() => {
       this.timeRemaining--;
-      if (!this.timeRemaining) {
+
+      if (this.timeRemaining > 0) {
+        this.updateValidationMessage();
+      } else {
         clearInterval(this.countdownInterval);
         this.isTokenValid = false;
+        this.validationMessage = '';
       }
     }, 1000);
   }
 
+  private updateValidationMessage(): void {
+    const minutes = Math.floor(this.timeRemaining / 60);
+    const seconds = this.timeRemaining % 60;
+    this.validationMessage = `Tu token es válido por ${minutes}m ${seconds}s`;
+  }
+
+  // Modificar lógica para manejar el bloqueo
   private lockAccount(): void {
     this.accountLocked = true;
-    setTimeout(() => {
-      this.accountLocked = false;
-      this.remainingAttempts = 3;
-      this.validationMessage = '';
-    }, 5 * 60 * 1000);
+    this.lockTimeRemaining = 300;
+    this.updateLockMessage();
+
+    this.lockTimeout = setInterval(() => {
+      this.lockTimeRemaining--;
+
+      if (this.lockTimeRemaining > 0) {
+        this.updateLockMessage();
+      } else {
+        clearInterval(this.lockTimeout);
+        this.accountLocked = false;
+        this.validationMessage = '';
+      }
+    }, 1000);
+  }
+
+  private updateLockMessage(): void {
+    const minutes = Math.floor(this.lockTimeRemaining / 60);
+    const seconds = this.lockTimeRemaining % 60;
+    this.validationMessage = `Su cuenta estará bloqueada por ${minutes}m ${seconds}s.`;
+  }
+
+  showTokenPopup(): void {
+    alert('Debes pedir un token y activarlo para realizar esta acción.');
+  }
+
+  ngOnDestroy(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+    if (this.lockTimeout) {
+      clearInterval(this.lockTimeout);
+    }
   }
 
   logout(): void {

@@ -73,7 +73,7 @@ h2 a {
   height: 60px;
   max-height: 60px;
   min-height: 60px;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .container tr:nth-child(even) {
@@ -81,7 +81,7 @@ h2 a {
   height: 60px;
   max-height: 60px;
   min-height: 60px;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .container th {
@@ -133,6 +133,17 @@ h2 a {
   border-radius: 5px;
   padding: 10px;
   margin-left: 230px;
+}
+.plus-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.plus-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .plus-icon:hover {
@@ -217,6 +228,11 @@ h2 a {
   opacity: 0.8;
 }
 
+img.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .temporary-row {
   background-color: rgba(255, 165, 0, 0.6);
   color: #4D4D4D;
@@ -239,7 +255,7 @@ h2 a {
   height: 60%;
   width: 80%;
   color: #ccc;
-  font-size: bold;  
+  font-size: bold;
   font-family: 'poppins', sans-serif;
   box-sizing: border-box;
 
@@ -294,33 +310,33 @@ h2 a {
 
 .btn-token:hover, .btn-validate:hover {
   background-color: #F2F2F2;
-  opacity: 0.9; 
+  opacity: 0.9;
 }
 
 .password-container {
   display: flex;
   align-items: center;
   position: relative;
-  width: 100%; 
+  width: 100%;
 }
 
-.password-container input[type="password"], 
+.password-container input[type="password"],
 .password-container input[type="text"] {
   flex: 1;
   color: #ccc;
-  width: 100%; 
-  padding-right: 10px; 
+  width: 100%;
+  padding-right: 10px;
 }
 
 .eye-icon {
-  margin-left: 10px; 
+  margin-left: 10px;
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
 
 .btn-logout {
-  background-color: #FF6347; 
+  background-color: #FF6347;
   color: white;
   padding: 13px 20px;
   font-size: 1em;
@@ -328,7 +344,7 @@ h2 a {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 300px; 
+  margin-right: 300px;
 }
 
 .btn-logout:hover {
